@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+	{% load static %}
+	<title>Page 1</title>
+    <link href="{% static "form/css/style.css" %}" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
+</head>
+<body>
+
+	<div class="container">
+		<center>
+			<a href="#" onclick=show_hide_class("animal")>Show Animal</a>
+			<a href="#" onclick=show_hide_class("race")>Show Race</a>
+			<a href="#" onclick=show_hide_class("cheptel")>Show Cheptel</a>
+		</center>
+		<br>
+	
+		<table class="tab_entete">
+			<tr>
+				<script type="text/javascript">
+					document.write(genere_input(8, "animal"));
+					document.write(genere_input(2, "race"));
+					document.write(genere_input(2, "cheptel"));
+
+				</script>
+			</tr>
+			<tr>
+				<script type="text/javascript">
+					document.write(genere_champs());
+				</script>
+			</tr>
+		</table>
+
+		<div id="tab1">
+			<script type="text/javascript">
+				getAnimal([],[]);
+			</script>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		document.onkeydown = function(e) {
+			if(e) {
+				if(e.keyCode===13) { 
+				    var inputs = [];
+				    for (var i = 0 ; i < $('input').length ; i++) {
+				    	inputs.push($('input')[i].value.toUpperCase());
+				    }
+				    var indice = indice_change(inputs);
+				    document.getElementById('tab1').innerHTML = "";
+				    getAnimal(indice,inputs);
+				}
+			}
+		};
+	</script>
+</body>
+</html>
+

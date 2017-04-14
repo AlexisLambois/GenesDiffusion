@@ -1,0 +1,50 @@
+table{
+	border: 3px solid;
+	border-collapse: collapse;
+}
+
+td{
+	border: 2px solid red;
+	border-collapse: collapse;
+	height:50px ;
+	text-align: center;
+	min-width:130px;
+	max-width:130px;
+}
+
+tr{
+	width: 90%;
+	margin-left: 5%;
+}
+
+.tab_entete input{
+	width: 80%;
+}
+
+a{
+	text-decoration: none;
+	background-color: #F5A9BC;
+	border: 2px solid;
+	padding: 3px;
+
+}
+
+.entete{
+	text-align: center;
+	font-size: large;
+	background-color: #F5A9BC;
+	
+}
+
+.flex{
+	display: flex;
+}
+
+.flex h2{
+	color : red;
+	margin-left: 10%;
+}
+
+.page-header h1{
+	margin-left: 5%;
+}

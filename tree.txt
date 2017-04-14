@@ -1,0 +1,53 @@
+.
+├── db.sqlite3
+├── form
+│   ├── admin.py
+│   ├── ajax
+│   │   ├── __init__.py
+│   │   ├── insert.py
+│   │   └── select.py
+│   ├── apps.py
+│   ├── __init__.py
+│   ├── manager
+│   │   ├── animalmanager.py
+│   │   ├── cheptelmanager.py
+│   │   ├── databasemanager.py
+│   │   ├── __init__.py
+│   │   ├── preleveurmanager.py
+│   │   └── racemanager.py
+│   ├── migrations
+│   │   ├── 0001_initial.py
+│   │   └── __init__.py
+│   ├── models
+│   │   ├── animal.py
+│   │   ├── cheptel.py
+│   │   ├── __init__.py
+│   │   ├── preleveur.py
+│   │   └── race.py
+│   ├── static
+│   │   └── form
+│   │       ├── css
+│   │       │   └── style.css
+│   │       ├── exemple.csv
+│   │       └── js
+│   │           └── main.js
+│   ├── templates
+│   │   └── form
+│   │       ├── index.html
+│   │       └── insert.html
+│   ├── urls.py
+│   └── views.py
+├── manage.py
+├── media
+│   └── exemple.csv
+├── Project
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── script.sh
+├── static
+│   └── js
+└── tree.txt
+
+15 directories, 35 files

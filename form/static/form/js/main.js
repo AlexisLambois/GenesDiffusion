@@ -9,10 +9,16 @@ function getAnimal(indice,inputs){
 	});
 };
 
-function file_verif(filepath){
-	console.log(filepath);
-	return filepath;
-}
+function insertAnimal(data){
+	$.ajax({
+		type: "POST",
+		url: "/ajax/add/",
+		data: {'data':data},
+		success: function(data) {
+			console.log("fait");
+		}
+	});
+};
 
 function genere_input(int,id){
 	var text = "";
@@ -60,7 +66,18 @@ function show_hide_class(maclass) {
 		else
 			lediv[i].style.display = "none";
 	}
+}
 
+function search_error(error_tab){
+	var error = false;
+	for (var i = 0; i < error_tab.length; i++) {
+		var ligne = document.getElementById(i+"")
+		for (var j = 0; j < error_tab[i].length; j++) {
+			ligne.getElementsByClassName(error_tab[i][j]+"")[0].style.background ="#F5A9BC";
+			error = true;
+		}
+	}
+	return error;
 }
 
 function affiche_tab(donne,div){

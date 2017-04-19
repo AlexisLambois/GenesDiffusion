@@ -75,7 +75,7 @@ class DatabaseManager(object):
 		return data
 
 	@staticmethod
-	def select_races_by_nom(nom):
+	def select_race_by_nom(nom):
 		DatabaseManager.open_connexion()
 		DatabaseManager.cursor.execute("SELECT * FROM form_race WHERE nom='"+str(nom)+"';")
 		data = DatabaseManager.cursor.fetchall()
@@ -109,7 +109,7 @@ class DatabaseManager(object):
 		return data
 
 	@staticmethod
-	def select_cheptels_by_detenteur(detenteur):
+	def select_cheptel_by_detenteur(detenteur):
 		DatabaseManager.open_connexion()
 		DatabaseManager.cursor.execute("SELECT * FROM form_cheptel WHERE detenteur='"+str(detenteur)+"';")
 		data = DatabaseManager.cursor.fetchall()
@@ -193,7 +193,7 @@ class DatabaseManager(object):
 	@staticmethod
 	def select_animals_by_race(race):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE race='"+str(race)+"';")
+		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE race_id='"+str(race)+"';")
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
@@ -201,7 +201,7 @@ class DatabaseManager(object):
 	@staticmethod
 	def select_animals_by_cheptel(cheptel):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE cheptel='"+str(cheptel)+"';")
+		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE cheptel_id='"+str(cheptel)+"';")
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
@@ -209,12 +209,12 @@ class DatabaseManager(object):
 	@staticmethod
 	def register_animal(numero, nom, sexe, race, date_naissance, pere, mere, jumeau, pays, cheptel):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("INSERT INTO form_animal(numero, nom, sexe, race, date_naissance, pere, mere, jumeau, pays, cheptel) \
-		VALUES('"+str(numero)+"', '"+str(nom)+"', '"+str(sexe)+"', '"+str(race)+"', \
-		'"+str(date_naissance)+"', '"+str(pere)+"', '"+str(mere)+"', '"+str(jumeau)+"', '"+str(pays)+"', '"+str(cheptel)+"') \
+		DatabaseManager.cursor.execute("INSERT INTO form_animal(numero, nom, sexe, race_id, date_naissance, pere, mere, jumeau, pays, cheptel_id) \
+		VALUES('"+str(numero)+"', '"+str(nom)+"', '"+str(sexe)+"', '"+str(race.get_numero())+"', \
+		'"+str(date_naissance)+"', '"+str(pere)+"', '"+str(mere)+"', '"+str(jumeau)+"', '"+str(pays)+"', '"+str(cheptel.get_numero())+"') \
 		ON CONFLICT(numero) DO UPDATE \
-		SET numero='"+str(numero)+"', nom='"+str(nom)+"', sexe='"+str(sexe)+"', race='"+str(race)+"', \
+		SET numero='"+str(numero)+"', nom='"+str(nom)+"', sexe='"+str(sexe)+"', race_id='"+str(race.get_numero())+"', \
 		date_naissance='"+str(date_naissance)+"', pere='"+str(pere)+"', mere='"+str(mere)+"', \
-		jumeau='"+str(jumeau)+"', pays='"+str(pays)+"', cheptel='"+str(cheptel)+"';")
+		jumeau='"+str(jumeau)+"', pays='"+str(pays)+"', cheptel_id='"+str(cheptel.get_numero())+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()

@@ -4,7 +4,13 @@ from django.utils.html import *
 
 class Race(models.Model):
     numero = models.CharField(max_length=20,primary_key=True)
-    nom = models.CharField(max_length=255,null=True)        
+    nom = models.CharField(max_length=255,null=True)   
+    
+    @classmethod
+    def create(cls,numero,nom):
+        race = cls(numero = numero,
+            nom = nom)
+        return race       
 
     def get_numero(self):
         return self.numero

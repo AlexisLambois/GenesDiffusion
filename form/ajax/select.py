@@ -20,7 +20,7 @@ def go_select(request):
               numBovin = []
               for row in saisieByIndice(indice[0],inputs[indice[0]]):                         
                      numBovin.append(row.get_numero())              
-              
+                          
               for i in range(1,len(indice)):
                      var = []
                      for row in saisieByIndice(indice[i],inputs[indice[i]]):                         
@@ -56,13 +56,13 @@ def six(string):
 def seven(string):
        return AnimalManager.get_all_animals()
 def eight(string):
-       return RaceManager.get_race_by_numero(string)
-def nine(string):
-       return RaceManager.get_races_by_nom(string)
+       return AnimalManager.get_animals_by_id_race(string)
+def nine(string):       
+       return AnimalManager.get_animals_by_id_race(RaceManager.get_race_by_nom(string)[0].get_numero())
 def ten(string):
-       return CheptelManager.get_cheptel_by_numero(string)
+       return AnimalManager.get_animals_by_cheptel(string)
 def eleven(string):
-       return CheptelManager.get_cheptels_by_detenteur(string)
+       return AnimalManager.get_animals_by_cheptel(CheptelManager.get_cheptel_by_detenteur(string)[0].get_numero())
 
 def saisieByIndice(indice,string):
        options = {

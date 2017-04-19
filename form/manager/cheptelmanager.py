@@ -30,7 +30,7 @@ class CheptelManager(object):
         return data
 
     @staticmethod
-    def get_cheptels_by_detenteur(detenteur):
+    def get_cheptel_by_detenteur(detenteur):
         cheptels = []
         data = DatabaseManager.select_cheptel_by_detenteur(detenteur)
         for row in data:

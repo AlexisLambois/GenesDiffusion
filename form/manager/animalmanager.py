@@ -85,12 +85,20 @@ class AnimalManager(object):
         return animals
 
     @staticmethod
-    def get_animals_by_race(race):
+    def get_animals_by_id_race(race):
         animals = []
         data = DatabaseManager.select_animals_by_race(race)
         for row in data:
             animals.append(row_to_animal(row))
         return animals
+    
+    @staticmethod
+    def get_animals_by_nom_race(race):
+        animals = []
+        data = DatabaseManager.select_animals_by_race(race)
+        for row in data:
+            animals.append(row_to_animal(row))
+        return animals    
 
     @staticmethod
     def get_animals_by_cheptel(cheptel):

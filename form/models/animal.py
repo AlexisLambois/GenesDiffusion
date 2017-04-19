@@ -18,6 +18,20 @@ class Animal(models.Model):
     cheptel = models.ForeignKey(Cheptel, on_delete=models.CASCADE)
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
     
+    @classmethod
+    def create(cls,numero,nom,sexe,date_naissance,pere,mere,pays,jumeau):
+        animal = cls(numero = numero,
+            nom = nom,
+            sexe = sexe,
+            date_naissance = date_naissance,
+            pere = pere,
+            mere = mere,
+            jumeau = jumeau,
+            pays = pays,
+            cheptel = Cheptel.create("76344700","Phillipe"),
+            race = Race.create("38","GRISE"))
+        return animal
+        
     def get_numero(self):
         return self.numero
     

@@ -7,7 +7,7 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+<!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"> -->
 </head>
 <body>
 
@@ -18,26 +18,37 @@
 	<div class="container">
 		
 		<form  enctype="multipart/form-data" action="" method="post">
-    			{% csrf_token %}
-    			<input type="file" name="myfile">
-    			<input type="submit" value="Submit" />
+    		{% csrf_token %}
+    		<input type="file" name="myfile" id="file" required>
+    		<input type="submit" value="Submit"/>
 		</form>
-	
-		{% if  uploaded_file_url == 'mauvaise extension' %}
-    		<h1 style="color:red;">Mauvaise extension</h1>
-    	{% elif uploaded_file_url %}
-  			<p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-  		{% endif %}
-   		
-    	<div id="tab1">
-    	
-    	</div>
-    	
-	</div>
-
-	<script type="text/javascript">
 		
-	</script>
+		<br>	
+		
+		{% if data_html %}	
+			{{data_html}}
+  		{% endif %}
+  		
+  		<br>
+
+		<div class="valider">
+			{% csrf_token %}
+			<a href="#" id="valider" onclick="insertAnimal({{data}})">Valider</a>
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript">show_hide_class("valider")</script>
+	
+	{% if  error_data %}	
+		<script type="text/javascript">
+			show_hide_class("valider");
+			var valide = search_error({{ error_data }});
+ 	 		if (valide) {
+	 			document.getElementById("valider").disabled = "true";
+ 	 		}
+		</script>
+	{% endif %}
 </body>
 </html>
 

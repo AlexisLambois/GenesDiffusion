@@ -30,7 +30,7 @@ class RaceManager(object):
         return races
 
     @staticmethod
-    def get_races_by_nom(nom):
+    def get_race_by_nom(nom):
         races = []
         data = DatabaseManager.select_race_by_nom(nom)
         for row in data:

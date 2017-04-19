@@ -5,7 +5,13 @@ from django.utils.html import *
 
 class Cheptel(models.Model):
     numero = models.CharField(max_length=20,primary_key=True)
-    detenteur = models.CharField(max_length=255,null=True)    
+    detenteur = models.CharField(max_length=255,null=True)
+    
+    @classmethod
+    def create(cls,numero,detenteur):
+        cheptel = cls(numero = numero,
+            detenteur = detenteur)
+        return cheptel    
 
     def get_numero(self):
         return self.numero

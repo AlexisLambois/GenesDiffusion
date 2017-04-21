@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse
 from ..manager.animalmanager import AnimalManager
 from ..manager.racemanager import RaceManager
 from ..manager.cheptelmanager import CheptelManager
+from ..models.animal import Animal
 
 def go_select(request):
        
@@ -18,14 +19,24 @@ def go_select(request):
               data = json.dumps(str(text))
        else:
               numBovin = []
-              for row in saisieByIndice(indice[0],inputs[indice[0]]):                         
-                     numBovin.append(row.get_numero())              
+     
+              for row1 in saisieByIndice(indice[0],inputs[indice[0]]):
+                     if not isinstance(row1, Animal):
+                            for row2 in row1:                         
+                                   numBovin.append(row2.get_numero())   
+                     else:
+                            numBovin.append(row1.get_numero())   
                           
               for i in range(1,len(indice)):
                      var = []
-                     for row in saisieByIndice(indice[i],inputs[indice[i]]):                         
-                            if row.get_numero() in numBovin:
-                                   var.append(row.get_numero())
+                     for row1 in saisieByIndice(indice[i],inputs[indice[i]]):
+                            if not isinstance(row1, Animal):
+                                   for row2 in row1:                                  
+                                          if row2.get_numero() in numBovin:
+                                                 var.append(row2.get_numero())
+                            else:
+                                   if row1.get_numero() in numBovin:
+                                          var.append(row1.get_numero())                                   
                      numBovin = var             
                                    
               animals = []
@@ -57,12 +68,18 @@ def seven(string):
        return AnimalManager.get_all_animals()
 def eight(string):
        return AnimalManager.get_animals_by_id_race(string)
-def nine(string):       
-       return AnimalManager.get_animals_by_id_race(RaceManager.get_race_by_nom(string)[0].get_numero())
+def nine(string):
+       id_animal = []
+       for race in RaceManager.get_race_by_nom(string):
+              id_animal.append(AnimalManager.get_animals_by_cheptel(cheptel.get_numero()))
+       return id_animal       
 def ten(string):
        return AnimalManager.get_animals_by_cheptel(string)
 def eleven(string):
-       return AnimalManager.get_animals_by_cheptel(CheptelManager.get_cheptel_by_detenteur(string)[0].get_numero())
+       id_animal = []
+       for cheptel in CheptelManager.get_cheptel_by_detenteur(string):
+              id_animal.append(AnimalManager.get_animals_by_cheptel(cheptel.get_numero()))
+       return id_animal
 
 def saisieByIndice(indice,string):
        options = {

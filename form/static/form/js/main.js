@@ -15,10 +15,14 @@ function insertAnimal(data){
 		url: "/ajax/add/",
 		data: {'data':data},
 		success: function(data) {
-			console.log("fait");
+			document.getElementsByClassName('data')[0].innerHTML = "";
+			document.getElementsByClassName('access')[0].innerHTML = "";		
+			$("<h3>Les logs sont disponibles : " + data + "</h3>").appendTo(".access");
 		}
 	});
 };
+
+
 
 function genere_input(int,id){
 	var text = "";
@@ -70,7 +74,7 @@ function show_hide_class(maclass) {
 
 function search_error(error_tab){
 	var error = false;
-	for (var i = 0; i < error_tab.length; i++) {
+	for (var i = 1; i < error_tab.length; i++) {
 		var ligne = document.getElementById(i+"")
 		for (var j = 0; j < error_tab[i].length; j++) {
 			ligne.getElementsByClassName(error_tab[i][j]+"")[0].style.background ="#F5A9BC";
@@ -83,4 +87,20 @@ function search_error(error_tab){
 function affiche_tab(donne,div){
 	$("<table>").appendTo(div);
 	$(donne).appendTo(div+" table");
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

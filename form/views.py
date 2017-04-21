@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.conf import settings
 import sys,os,csv,re
 from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from django.template import loader
 from django.utils.html import *
 from django.views.decorators.csrf import csrf_exempt
 
@@ -31,9 +33,10 @@ def insert_view(request):
             uploaded_file_url = fs.url(filename)   
             data = data_csv_gather( settings.BASE_DIR + uploaded_file_url)
             
+           
             for row_number in range(0,len(data)):
                 error_data.append(dara_row_verif(data[row_number]))
-        
+           
         return render(request, 'form/insert.html', {
             'data_html': to_html(data),
             'error_data' : error_data,

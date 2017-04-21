@@ -13,41 +13,42 @@
 │   │   ├── cheptelmanager.py
 │   │   ├── databasemanager.py
 │   │   ├── __init__.py
+│   │   ├── prelevementmanager.py
 │   │   ├── preleveurmanager.py
 │   │   └── racemanager.py
 │   ├── migrations
 │   │   ├── 0001_initial.py
+│   │   ├── 0002_prelevement.py
+│   │   ├── 0003_auto_20170419_1321.py
+│   │   ├── 0004_auto_20170419_1321.py
+│   │   ├── 0005_prelevement_animal.py
 │   │   └── __init__.py
 │   ├── models
 │   │   ├── animal.py
 │   │   ├── cheptel.py
 │   │   ├── __init__.py
+│   │   ├── prelevement.py
 │   │   ├── preleveur.py
 │   │   └── race.py
 │   ├── static
 │   │   └── form
 │   │       ├── css
 │   │       │   └── style.css
+│   │       ├── data.ods
 │   │       ├── exemple2.csv
+│   │       ├── exemple3.csv
 │   │       ├── exemple.csv
 │   │       └── js
 │   │           └── main.js
 │   ├── templates
 │   │   └── form
 │   │       ├── index.html
-│   │       └── insert.html
+│   │       ├── insert.html
+│   │       └── logs.html
 │   ├── urls.py
 │   └── views.py
 ├── manage.py
 ├── media
-│   ├── exemple2_8gOfVQu.csv
-│   ├── exemple2.csv
-│   ├── exemple2_OhJs3Cv.csv
-│   ├── exemple2_pHikmg1.csv
-│   ├── exemple2_QXmMZFR.csv
-│   ├── exemple2_sHzM6FS.csv
-│   ├── exemple2_VLC69Tv.csv
-│   └── exemple2_XekgoZe.csv
 ├── Project
 │   ├── __init__.py
 │   ├── settings.py
@@ -60,4 +61,4 @@
 │   └── js
 └── tree.txt
 
-15 directories, 45 files
+15 directories, 46 files

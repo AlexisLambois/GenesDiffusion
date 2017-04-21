@@ -2,6 +2,7 @@
 <html>
 <head>
 	{% load static %}
+	{% csrf_token %}	
 	<title>Page 2</title>
     <link href="{% static "form/css/style.css" %}" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -23,17 +24,23 @@
     		<input type="submit" value="Submit"/>
 		</form>
 		
-		<br>	
+		<br>
 		
-		{% if data_html %}	
-			{{data_html}}
-  		{% endif %}
-  		
-  		<br>
-
-		<div class="valider">
-			{% csrf_token %}
-			<a href="#" id="valider" onclick="insertAnimal({{data}})">Valider</a>
+		<div class="data">
+			{% if data_html %}	
+				{{data_html}}
+	  		{% endif %}
+	  		
+	  		<br>
+	
+			<div class="valider">
+				{% csrf_token %}
+				<input type="button" value="Valider" id="valider" onclick="insertAnimal({{data}})"/>
+			</div>
+		</div> 
+		
+		<div class="access">
+		
 		</div>
 		
 	</div>

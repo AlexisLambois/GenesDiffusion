@@ -3,6 +3,8 @@
 from django.db import models
 from .cheptel import Cheptel
 from .race import Race
+from ..manager.cheptelmanager import CheptelManager
+from ..manager.racemanager import RaceManager
 import os, sys, string
 from django.utils.html import *
 
@@ -19,7 +21,7 @@ class Animal(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
     
     @classmethod
-    def create(cls,numero,nom,sexe,date_naissance,pere,mere,pays,jumeau):
+    def create(cls,numero,nom,sexe,date_naissance,pere,mere,pays,jumeau,race,cheptel):
         animal = cls(numero = numero,
             nom = nom,
             sexe = sexe,
@@ -28,8 +30,8 @@ class Animal(models.Model):
             mere = mere,
             jumeau = jumeau,
             pays = pays,
-            cheptel = Cheptel.create("76344700","Phillipe"),
-            race = Race.create("38","GRISE"))
+            cheptel = CheptelManager.get_cheptel_by_numero(cheptel)[0],
+            race = RaceManager.get_race_by_numero(race)[0])
         return animal
         
     def get_numero(self):

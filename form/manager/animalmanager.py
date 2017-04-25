@@ -2,7 +2,7 @@ from ..models.animal import *
 from .databasemanager import *
 
 def row_to_animal(row):
-    return Animal(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+    return Animal(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],row[10],row[11])
 
 class AnimalManager(object):
     @staticmethod
@@ -10,7 +10,7 @@ class AnimalManager(object):
         if not isinstance(animal, Animal):
             raise TypeError("L'objet n'est pas un Animal")
         DatabaseManager.register_animal(animal.get_numero(), animal.get_nom(), animal.get_sexe(), animal.get_race(), animal.get_date_naissance(), \
-                                                animal.get_pere(), animal.get_mere(), animal.get_jumeau(), animal.get_pays(), animal.get_cheptel())
+                                                animal.get_pere(), animal.get_mere(), animal.get_jumeau(), animal.get_pays(), animal.get_cheptel(),animal.get_ordre(),animal.get_date_insertion())
 
     @staticmethod
     def delete(animal):
@@ -91,19 +91,27 @@ class AnimalManager(object):
         for row in data:
             animals.append(row_to_animal(row))
         return animals
-    
-    @staticmethod
-    def get_animals_by_nom_race(race):
-        animals = []
-        data = DatabaseManager.select_animals_by_race(race)
-        for row in data:
-            animals.append(row_to_animal(row))
-        return animals    
 
     @staticmethod
-    def get_animals_by_cheptel(cheptel):
+    def get_animals_by_id_cheptel(cheptel):
         animals = []
         data = DatabaseManager.select_animals_by_cheptel(cheptel)
+        for row in data:
+            animals.append(row_to_animal(row))
+        return animals
+    
+    @staticmethod
+    def get_animals_by_ordre(ordre):
+        animals = []
+        data = DatabaseManager.select_animals_by_ordre(ordre)
+        for row in data:
+            animals.append(row_to_animal(row))
+        return animals
+    
+    @staticmethod
+    def get_animals_by_date_insertion(date_insertion):
+        animals = []
+        data = DatabaseManager.select_animals_by_date_insertion(date_insertion)
         for row in data:
             animals.append(row_to_animal(row))
         return animals

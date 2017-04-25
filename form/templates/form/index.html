@@ -11,16 +11,35 @@
 
 	<div class="container">
 		<center>
+<!-- 			<a href="#" onclick=show_hide_class("prelevement")>Show Prelevement</a> -->
+<!-- 			<a href="#" onclick=show_hide_class("preleveur")>Show Preleveur</a> -->
 			<a href="#" onclick=show_hide_class("animal")>Show Animal</a>
 			<a href="#" onclick=show_hide_class("race")>Show Race</a>
 			<a href="#" onclick=show_hide_class("cheptel")>Show Cheptel</a>
+			<br>
+			<br>
+			<a href="#" id="valider">Enregistrer</a>
+			<br>
 		</center>
 		<br>
-	
+
+		<div class="onoffswitch">
+			<input type="checkbox" name="onoffswitch"
+				class="onoffswitch-checkbox" id="myonoffswitch" checked> <label
+				class="onoffswitch-label" for="myonoffswitch"> <span
+				class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+			</label>
+		</div>
+
+		<br>
+		
 		<table class="tab_entete">
 			<tr>
 				<script type="text/javascript">
-					document.write(genere_input(8, "animal"));
+				
+// 					document.write(genere_input(13, "prelevement"));
+// 					document.write(genere_input(2, "preleveur"));
+					document.write(genere_input(10, "animal"));
 					document.write(genere_input(2, "race"));
 					document.write(genere_input(2, "cheptel"));
 
@@ -46,7 +65,9 @@
 				if(e.keyCode===13) { 
 				    var inputs = [];
 				    for (var i = 0 ; i < $('input').length ; i++) {
-				    	inputs.push($('input')[i].value.toUpperCase());
+				    	if( $('input')[i].type.toLowerCase() == 'text'){
+				    		inputs.push($('input')[i].value.toUpperCase());
+				    	}
 				    }
 				    var indice = indice_change(inputs);
 				    document.getElementById('tab1').innerHTML = "";
@@ -54,6 +75,16 @@
 				}
 			}
 		};
+		document.getElementById('valider').onclick = function(){
+			var inputs = [];
+		    for (var i = 0 ; i < $('input').length ; i++) {
+		    	if( $('input')[i].type.toLowerCase() == 'text'){
+		    		inputs.push($('input')[i].value.toUpperCase());
+		    	}
+		    }
+		    var indice = indice_change(inputs);
+			saveData(indice,inputs);
+		}
 	</script>
 </body>
 </html>

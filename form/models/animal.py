@@ -5,8 +5,7 @@ from .cheptel import Cheptel
 from .race import Race
 from ..manager.cheptelmanager import CheptelManager
 from ..manager.racemanager import RaceManager
-import os, sys, string
-from django.utils.html import *
+from django.utils.html import format_html
 
 class Animal(models.Model):
     numero = models.CharField(max_length=12,primary_key=True)
@@ -19,9 +18,11 @@ class Animal(models.Model):
     pays = models.CharField(max_length=255,null=True)     
     cheptel = models.ForeignKey(Cheptel, on_delete=models.CASCADE)
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    date_insertion = models.DateField(null=True)
+    ordre = models.CharField(max_length=3,null=True)
     
     @classmethod
-    def create(cls,numero,nom,sexe,date_naissance,pere,mere,pays,jumeau,race,cheptel):
+    def create(cls,numero,nom,sexe,date_naissance,pere,mere,pays,jumeau,race,cheptel,ordre,date_insertion):
         animal = cls(numero = numero,
             nom = nom,
             sexe = sexe,
@@ -31,9 +32,14 @@ class Animal(models.Model):
             jumeau = jumeau,
             pays = pays,
             cheptel = CheptelManager.get_cheptel_by_numero(cheptel)[0],
-            race = RaceManager.get_race_by_numero(race)[0])
+            race = RaceManager.get_race_by_numero(race)[0],
+            ordre = ordre,
+            date_insertion = date_insertion
+            )
         return animal
         
+    #----------------------------------------------------------Getter/Setter----------------------------------------------------------#
+    
     def get_numero(self):
         return self.numero
     
@@ -56,13 +62,21 @@ class Animal(models.Model):
         return self.jumeau
     
     def get_pays(self):
-        return self.pays
-    
-    def get_race(self):
-        return self.race    
+        return self.pays  
     
     def get_cheptel(self):
         return self.cheptel
+    
+    def get_race(self):
+        return self.race      
+    
+    def get_ordre(self):
+        return self.ordre
+    
+    def get_date_insertion(self):
+        return self.date_insertion
+    
+    #---------------------------------------------------------------------------------------------------------------------------#
     
     def set_numero(self, numero):
         self.numero = numero
@@ -72,9 +86,6 @@ class Animal(models.Model):
     
     def set_sexe(self, sexe):
         self.sexe = sexe
-    
-    def set_race(self, race):
-        self.race = race
     
     def set_date_naissance(self, date_naissance):
         self.date_naissance = date_naissance
@@ -93,10 +104,34 @@ class Animal(models.Model):
     
     def set_cheptel(self, cheptel):
         self.cheptel = cheptel
+        
+    def set_race(self, race):
+        self.race = race
+        
+    def set_ordre(self, ordre):
+        self.ordre=ordre
+        
+    def set_date_insertion(self, date_insertion):
+        self.date_insertion=date_insertion
+    
+    #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
     
     def to_string(self):
-        return str(self.numero)+"\t"+str(self.nom)+"\t"+str(self.sexe)+"\t"+str(self.race)+"\t"+str(self.date_naissance)+"\t"+str(self.pere)+"\t"+str(self.mere)+"\t"+str(self.jumeau)+"\t"+str(self.pays)+"\t"+str(self.cheptel)    
+        return  (" Animal : "+self.get_numero()+"\t"+self.get_nom()+"\t"+self.get_sexe()+"\t"+str(self.get_date_naissance())+"\t"+self.get_pere()+"\t"+self.get_mere()+"\t"+str(self.get_jumeau())+"\t"+self.get_pays()+"\t"+self.cheptel.to_string()+"\t"+self.race.to_string()+"\t"+self.get_ordre()+"\t"+str(self.get_date_insertion())+"\n")    
     
     def to_html(self):
-        text = "<tr><td class=\"animal\">"+self.numero+"</td><td class=\"animal\">"+self.nom+"</td><td class=\"animal\">"+self.sexe+"</td><td class=\"animal\">"+str(self.date_naissance)+"</td><td class=\"animal\">"+self.pere+"</td><td class=\"animal\">"+self.mere+"</td><td class=\"animal\">"+self.pays+"</td><td class=\"animal\">"+str(self.jumeau)+"</td>"+self.race.to_html()+self.cheptel.to_html()+"</tr>"
+        text="<tr>"
+        text+="<td class=\"animal\">"+str(self.get_ordre())+"</td>"
+        text+="<td class=\"animal\">"+str(self.get_date_insertion())+"</td>"
+        text+="<td class=\"animal\">"+self.get_numero()+"</td>"
+        text+="<td class=\"animal\">"+self.get_nom()+"</td>"
+        text+="<td class=\"animal\">"+self.get_sexe()+"</td>"
+        text+="<td class=\"animal\">"+str(self.get_date_naissance())+"</td>"
+        text+="<td class=\"animal\">"+self.get_pere()+"</td>"
+        text+="<td class=\"animal\">"+self.get_mere()+"</td>"
+        text+="<td class=\"animal\">"+self.get_pays()+"</td>"
+        text+="<td class=\"animal\">"+str(self.get_jumeau())+"</td>"
+        text+=self.get_cheptel().to_html()
+        text+=self.get_race().to_html()
+        text+="</tr>"
         return format_html(text)

@@ -1,14 +1,12 @@
 <!doctype html>
 <html>
 <head>
-	{% load static %}
-	{% csrf_token %}	
+	{% load static %}	
 	<title>Page 2</title>
     <link href="{% static "form/css/style.css" %}" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-<!-- 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"> -->
 </head>
 <body>
 
@@ -21,14 +19,14 @@
 		<form  enctype="multipart/form-data" action="" method="post">
     		{% csrf_token %}
     		<input type="file" name="myfile" id="file" required>
-    		<input type="submit" value="Submit"/>
+    		<input type="submit" value="Check"/>
 		</form>
 		
 		<br>
 		
 		<div class="data">
-			{% if data_html %}	
-				{{data_html}}
+			{% if data %}	
+				<script type="text/javascript">document.write(data_to_html({{ data|safe }}));</script>
 	  		{% endif %}
 	  		
 	  		<br>

@@ -22,6 +22,8 @@
 │   │   ├── 0003_auto_20170419_1321.py
 │   │   ├── 0004_auto_20170419_1321.py
 │   │   ├── 0005_prelevement_animal.py
+│   │   ├── 0006_auto_20170424_1607.py
+│   │   ├── 0007_auto_20170425_1001.py
 │   │   └── __init__.py
 │   ├── models
 │   │   ├── animal.py
@@ -36,7 +38,7 @@
 │   │       │   └── style.css
 │   │       ├── data.ods
 │   │       ├── exemple2.csv
-│   │       ├── exemple3.csv
+│   │       ├── exemple3_4.csv
 │   │       ├── exemple.csv
 │   │       └── js
 │   │           └── main.js
@@ -44,9 +46,17 @@
 │   │   └── form
 │   │       ├── index.html
 │   │       ├── insert.html
-│   │       └── logs.html
+│   │       └── update.html
 │   ├── urls.py
-│   └── views.py
+│   └── views
+│       ├── __init__.py
+│       ├── __init__.pyc
+│       ├── insert_view.py
+│       ├── insert_view.pyc
+│       ├── select_view.py
+│       ├── select_view.pyc
+│       ├── update_view.py
+│       └── update_view.pyc
 ├── manage.py
 ├── media
 ├── Project
@@ -57,8 +67,6 @@
 ├── README.md
 ├── script.sh
 ├── script.sql
-├── static
-│   └── js
 └── tree.txt
 
-15 directories, 46 files
+14 directories, 55 files

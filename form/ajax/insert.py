@@ -1,15 +1,15 @@
 #! /usr/bin/python
 #-*- coding:UTF8 -*-
-import sys,json,time,os
-from django.shortcuts import render
-from ..manager.animalmanager import *
-from ..manager.racemanager import *
-from ..manager.cheptelmanager import *
+import time,os,re
+from ..manager.animalmanager import AnimalManager
+from ..manager.racemanager import RaceManager
+from ..manager.cheptelmanager import CheptelManager
 from ..models.animal import Animal
 from ..models.race import Race
+from ..models.cheptel import Cheptel
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 
 @csrf_exempt
 def go_insert(request):
@@ -17,17 +17,17 @@ def go_insert(request):
     addons_cheptel = []
     addons_animal = []
     champs_vide = []
-   
     total = []
     i = 1
+    
     while True:
         data = request.POST.getlist('data['+str(i)+'][]')
         total.append(data)
         i=i+1 
         if not len(data) != 0: break
     total.pop()
-    
-    for j in range(0,len(total)):
+
+    for j in range(0,len(total)-1):
         
         for colonne in range(0,len(total[j])):
             if(total[j][colonne] == ""):
@@ -41,13 +41,22 @@ def go_insert(request):
         if(len(CheptelManager.get_cheptel_by_numero(total[j][10])) == 0):
             CheptelManager.register(Cheptel.create(total[j][10],total[j][11]))
             if total[j][10] not in addons_cheptel : addons_cheptel.append(total[j][10])
-            
-        animal_temp = Animal.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][10])
+        
+        ordre = filename_analyse(total[len(total)-1][0])
+        animal_temp = Animal.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][10],ordre,time.strftime('%d-%m-%y',time.localtime()))
         AnimalManager.register(animal_temp)
         addons_animal.append(total[j][0])
         
-    data = format_html(str(write_to_log(addons_animal,addons_cheptel,addons_race,champs_vide)))
+    data = (str(write_to_log(addons_animal,addons_cheptel,addons_race,champs_vide)))
     return HttpResponse(data)       
+
+def filename_analyse(filename):
+    try:
+        ordre = str(filename[filename.index('_')+1:filename.index('_')+2])
+        if re.match(r"^[0-9]+$",ordre) is not None : 
+            return ordre
+    except ValueError:
+        return "000"
 
 def write_to_log(animal_array,cheptel_array,race_array,champs_vide):
     

@@ -205,16 +205,32 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
+	
+	@staticmethod
+	def select_animals_by_ordre(ordre):
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE ordre='"+str(ordre)+"';")
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
+	@staticmethod
+	def select_animals_by_date_insertion(date_insertion):
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE date_insertion='"+str(date_insertion)+"';")
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
 
 	@staticmethod
-	def register_animal(numero, nom, sexe, race, date_naissance, pere, mere, jumeau, pays, cheptel):
+	def register_animal(numero, nom, sexe, race, date_naissance, pere, mere, jumeau, pays, cheptel,ordre,date_insertion):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("INSERT INTO form_animal(numero, nom, sexe, race_id, date_naissance, pere, mere, jumeau, pays, cheptel_id) \
+		DatabaseManager.cursor.execute("INSERT INTO form_animal(numero, nom, sexe, race_id, date_naissance, pere, mere, jumeau, pays, cheptel_id,ordre,date_insertion) \
 		VALUES('"+str(numero)+"', '"+str(nom)+"', '"+str(sexe)+"', '"+str(race.get_numero())+"', \
-		'"+str(date_naissance)+"', '"+str(pere)+"', '"+str(mere)+"', '"+str(jumeau)+"', '"+str(pays)+"', '"+str(cheptel.get_numero())+"') \
+		'"+str(date_naissance)+"', '"+str(pere)+"', '"+str(mere)+"', '"+str(jumeau)+"', '"+str(pays)+"', '"+str(cheptel.get_numero())+"', '"+str(ordre)+"', '"+str(date_insertion)+"') \
 		ON CONFLICT(numero) DO UPDATE \
 		SET numero='"+str(numero)+"', nom='"+str(nom)+"', sexe='"+str(sexe)+"', race_id='"+str(race.get_numero())+"', \
 		date_naissance='"+str(date_naissance)+"', pere='"+str(pere)+"', mere='"+str(mere)+"', \
-		jumeau='"+str(jumeau)+"', pays='"+str(pays)+"', cheptel_id='"+str(cheptel.get_numero())+"';")
+		jumeau='"+str(jumeau)+"', pays='"+str(pays)+"', cheptel_id='"+str(cheptel.get_numero())+"', ordre='"+str(ordre)+"', date_insertion='"+str(date_insertion)+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()

@@ -2,9 +2,10 @@ function getAnimal(indice,inputs){
 	$.ajax({
 		type: "GET",
 		url: "/ajax/more/",
-		data: {'indice': indice,'inputs':inputs},
+		data: {'indice': indice,'inputs':inputs,'ordre':document.getElementById('myonoffswitch').checked},
 		success: function(data) {
 			affiche_tab(data,"#tab1");
+			return data
 		}
 	});
 };
@@ -22,7 +23,16 @@ function insertAnimal(data){
 	});
 };
 
-
+function saveData(indice,inputs){
+	$.ajax({
+		type: "POST",
+		url: "/ajax/save/",
+		data: {'indice': indice,'inputs':inputs},
+		success: function(data) {
+			
+		}
+	});
+};
 
 function genere_input(int,id){
 	var text = "";
@@ -33,12 +43,20 @@ function genere_input(int,id){
 }
 
 function genere_champs(){
-
-	var animal = ["Pays + Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
+	
+	var prelevement = ["Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception  Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
+	var preleveur = ["Numero Agrement","Nom"];
+	var animal = ["Ordre","Date Insertion","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
 	var race = ["Numero Race","Nom Race"];
 	var cheptel = ["Cheptel Actuel","Detenteur Actuel"];
 
 	var text = "";
+//	for (var i = 0; i < prelevement.length; i++) {
+//		text += "<td class=\"prelevement\">" + prelevement[i] + "</td>";
+//	}
+//	for (var i = 0; i < preleveur.length; i++) {
+//		text += "<td class=\"preleveur\">" + preleveur[i] + "</td>";
+//	}
 	for (var i = 0; i < animal.length; i++) {
 		text += "<td class=\"animal\">" + animal[i] + "</td>";
 	}
@@ -72,10 +90,27 @@ function show_hide_class(maclass) {
 	}
 }
 
+function data_to_html(data){
+	text = "<table>";
+	text+="<tr>";
+	for(var h = 0; h < data[0].length;h++){
+		text+="<td>"+data[0][h]+"</td>";
+	}
+	text+="</tr>";
+	for (var i = 1; i < data.length-1; i++) {
+		text+="<tr id="+i+">";
+		for (var j = 0; j < data[i].length; j++) {
+			text+="<td class="+j+">"+data[i][j]+"</td>";
+		}
+		text+="</tr>";
+	}
+	return text+"</table>";
+}
+
 function search_error(error_tab){
 	var error = false;
-	for (var i = 1; i < error_tab.length; i++) {
-		var ligne = document.getElementById(i+"")
+	for (var i = 0; i < error_tab.length; i++) {
+		var ligne = document.getElementById(i+1+"")
 		for (var j = 0; j < error_tab[i].length; j++) {
 			ligne.getElementsByClassName(error_tab[i][j]+"")[0].style.background ="#F5A9BC";
 			error = true;

@@ -1,22 +1,14 @@
-#! /usr/bin/python
-#-*- coding:UTF8 -*-
-from .manager.animalmanager import AnimalManager
-from .manager.preleveurmanager import PreleveurManager 
+'''
+Created on 25 avr. 2017
+
+@author: alexis
+'''
 from django.shortcuts import render
 from django.conf import settings
-import sys,os,csv,re
+import csv,re,json
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
-from django.template import loader
-from django.utils.html import *
+from django.utils.html import format_html
 from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt
-def create_view(request):
-    return render(request,'form/index.html',
-        {
-            'data_animal': AnimalManager.get_all_animals(),
-        })
 
 @csrf_exempt
 def insert_view(request):
@@ -32,17 +24,13 @@ def insert_view(request):
             filename = fs.save(myfile.name, myfile)
             uploaded_file_url = fs.url(filename)   
             data = data_csv_gather( settings.BASE_DIR + uploaded_file_url)
-            
-           
-            for row_number in range(0,len(data)):
+            data.append([myfile.name])
+            for row_number in range(1,len(data)-1):
                 error_data.append(dara_row_verif(data[row_number]))
-           
         return render(request, 'form/insert.html', {
-            'data_html': to_html(data),
             'error_data' : error_data,
-            'data' : data
+            'data' : json.dumps(data)
         })           
-    
     return render(request, 'form/insert.html')
 
 def extension_verif(filename):
@@ -86,4 +74,3 @@ def to_html(data):
             text += "</tr>"
         text += "</table>"
         return format_html(text)
-    

@@ -1,7 +1,6 @@
 
 from django.db import models
-import os, sys, string
-from django.utils.html import *
+from django.utils.html import format_html
 
 class Cheptel(models.Model):
     numero = models.CharField(max_length=20,primary_key=True)
@@ -9,16 +8,19 @@ class Cheptel(models.Model):
     
     @classmethod
     def create(cls,numero,detenteur):
-        cheptel = cls(numero = numero,
-            detenteur = detenteur)
+        cheptel = cls(numero = numero,detenteur = detenteur)
         return cheptel    
 
+    #----------------------------------------------------------Getter/Setter----------------------------------------------------------#
+    
     def get_numero(self):
         return self.numero
 
     def get_detenteur(self):
         return self.detenteur
-
+    
+    #---------------------------------------------------------------------------------------------------------------------------#
+    
     def set_numero(self, numero):
         self.numero = numero
 
@@ -26,12 +28,15 @@ class Cheptel(models.Model):
         if detenteur.strip() == '':
             raise ValueError("Nom de detenteur invalide")
         self.detenteur = detenteur
+        
+    #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
 
     def to_string(self):
-        return str(self.numero)+"\t"+str(self.detenteur)
+        return str(self.get_numero())+"\t"+str(self.get_detenteur())
     
     def to_html(self):
-        text = "<td class=\"cheptel\">"+str(self.numero)+"</td><td class=\"cheptel\">"+str(self.detenteur)+"</td>"
+        text = "<td class=\"cheptel\">"+str(self.get_numero())+"</td>"
+        text+="<td class=\"cheptel\">"+str(self.get_detenteur())+"</td>"
         return format_html(text)    
         
     

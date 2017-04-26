@@ -8,6 +8,5 @@ rm form/ajax/*.pyc
 rm form/*.pyc
 rm Project/*.pyc
 rm -rf media/*
-rm .*
 tree > tree.txt
 exit 0

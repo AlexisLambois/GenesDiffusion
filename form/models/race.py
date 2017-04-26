@@ -31,6 +31,8 @@ class Race(models.Model):
     
     #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
 
+    def to_array(self):
+        return [self.get_numero(),self.get_nom()]
     def to_string(self):
         return str(self.get_numero())+"\t"+str(self.get_nom())
 

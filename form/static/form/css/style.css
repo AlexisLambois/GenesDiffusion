@@ -1,9 +1,9 @@
-table {
+.data{
 	border: 3px solid;
 	border-collapse: collapse;
 }
 
-td {
+.data td {
 	border: 2px solid red;
 	border-collapse: collapse;
 	height: 50px;
@@ -12,13 +12,23 @@ td {
 	max-width: 130px;
 }
 
-tr {
+.data tr {
 	width: 90%;
 	margin-left: 5%;
 }
 
 .tab_entete input {
 	width: 80%;
+}
+
+#carre{
+	display: block;
+  	width: 30px;
+ 	height: 30px;
+  	cursor: pointer;	
+	background-color: #FE9A2E;
+	float: left;
+	margin-left:5px;
 }
 
 a {

@@ -16,7 +16,7 @@ function insertAnimal(data){
 		url: "/ajax/add/",
 		data: {'data':data},
 		success: function(data) {
-			document.getElementsByClassName('data')[0].innerHTML = "";
+			document.getElementsByClassName('data_tab')[0].innerHTML = "";
 			document.getElementsByClassName('access')[0].innerHTML = "";		
 			$("<h3>Les logs sont disponibles : " + data + "</h3>").appendTo(".access");
 		}
@@ -46,7 +46,7 @@ function genere_champs(){
 	
 	var prelevement = ["Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception  Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
 	var preleveur = ["Numero Agrement","Nom"];
-	var animal = ["Ordre","Date Insertion","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
+	var animal = ["Ordre","Date Insert/Up","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
 	var race = ["Numero Race","Nom Race"];
 	var cheptel = ["Cheptel Actuel","Detenteur Actuel"];
 
@@ -91,7 +91,7 @@ function show_hide_class(maclass) {
 }
 
 function data_to_html(data){
-	text = "<table>";
+	text = "<table class=\"data\">";
 	text+="<tr>";
 	for(var h = 0; h < data[0].length;h++){
 		text+="<td>"+data[0][h]+"</td>";
@@ -119,8 +119,18 @@ function search_error(error_tab){
 	return error;
 }
 
+function color_changed_data(changed_data){
+	
+	for (var i = 0; i < changed_data.length; i++) {
+		var ligne = document.getElementById(i+1+"")
+		for (var j = 0; j < changed_data[i].length; j++) {
+			ligne.getElementsByClassName(changed_data[i][j]+"")[0].style.background ="#FE9A2E";
+		}
+	}
+}
+
 function affiche_tab(donne,div){
-	$("<table>").appendTo(div);
+	$("<table class=\"data\" >").appendTo(div);
 	$(donne).appendTo(div+" table");
 }
 

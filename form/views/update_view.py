@@ -24,7 +24,6 @@ def update_view(request):
             data = data_csv_gather( settings.BASE_DIR + uploaded_file_url)
             data.append([myfile.name])
             data_changed = find_data_changed(data)
-            print(data_changed)
         return render(request, 'form/update.html', {'data' : json.dumps(data),'data_changed':json.dumps(data_changed)})      
     return render(request, 'form/update.html')
 

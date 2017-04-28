@@ -134,7 +134,7 @@ class Animal(models.Model):
         text+="<td class=\"animal\">"+self.get_mere()+"</td>"
         text+="<td class=\"animal\">"+self.get_pays()+"</td>"
         text+="<td class=\"animal\">"+str(self.get_jumeau())+"</td>"
-        text+=self.get_cheptel().to_html()
         text+=self.get_race().to_html()
+        text+=self.get_cheptel().to_html()
         text+="</tr>"
         return format_html(text)

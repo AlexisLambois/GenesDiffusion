@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+	{% load static %}	
+	<title>Page 4</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link href="{% static "form/css/style.css" %}" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
+</head>
+<body>
+	<div class="page-header">
+		<h1>Admin</h1>
+	</div>
+
+	<div class="container">
+		<center>
+			<a id="race">Admin Race</a>
+			<a id="cheptel">Admin Cheptel</a>
+		</center>
+		
+		<div class="race" style="display:none">
+			<h2>Race</h2>
+			<div class="race_update">
+				<form  enctype="multipart/form-data" action="" method="post">
+					<label>Id Numéro : </label>
+					<input id="id_update" name="input" type="text"/>
+					<input name="table" value="race" type="hidden"/>
+					<br><br>
+					<label>Nom : </label>
+					<div class="race_contenu">
+				
+					</div>
+					<br>
+				</form>
+				<label>Votre Id n'existe pas ? </label>
+		  		<input type="button" id="race_inserer" value="Insérez-le"/>
+			</div>
+			<br>
+		  	<div class="race_insertion" style="display:none">
+		  		<label>Retour a l'update ?</label>
+		  		<input type="button" id="retour" value="Retour"/>
+		  		<br><br>
+				<form  enctype="multipart/form-data" action="" method="post">
+					<label>Id Numéro : </label>
+					<input id="id_insert" name="input" type="text"/>
+					<input name="table" value="race" type="hidden"/>
+					<br><br>
+					<label>Nom : </label>
+					<input name="attribut" type="text"/>
+					<br><br>
+					<div class="race_contenu">
+				
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div class="cheptel" style="display:none" >
+			<h2>Cheptel</h2>
+			<div class="cheptel_update">
+				<form  enctype="multipart/form-data" action="" method="post">
+					<label>Id Numéro : </label>
+					<input id="id_update" name="input" type="text"/>
+					<input name="table" value="cheptel" type="hidden"/>
+					<br><br>
+					<label>Detenteur : </label>
+					<div class="cheptel_contenu">
+				
+					</div>
+					<br>
+				</form>
+				<label>Votre Id n'existe pas ? </label>
+		  		<input type="button" id="cheptel_inserer" value="Insérez-le"/>
+			</div>
+			<br>
+		  	<div class="cheptel_insertion" style="display:none">
+		  		<label>Retour a l'update ?</label>
+		  		<input type="button" id="retour" value="Retour"/>
+		  		<br><br>
+				<form  enctype="multipart/form-data" action="" method="post">
+					<label>Id Numéro : </label>
+					<input id="id_insert" name="input" type="text"/>
+					<input name="table" value="cheptel" type="hidden"/>
+					<br><br>
+					<label>Nom : </label>
+					<input name="attribut" type="text"/>
+					<br><br>
+					<div class="cheptel_contenu">
+				
+					</div>
+				</form>
+			</div>
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript">
+
+		$('.race_update #id_update')[0].onkeyup = function(){
+			findData("race",$('.race_update #id_update')[0].value,false);
+		}
+		$('.race_insertion #id_insert')[0].onkeyup = function(){
+			findData("race",$('.race_insertion #id_insert')[0].value,true);
+		}
+		document.getElementById('race_inserer').onclick =  function(){bouton("race");}
+		document.getElementById('retour').onclick =  function(){bouton("race");}
+		
+		$('.cheptel_update #id_update')[0].onkeyup = function(){
+			console.log()
+			findData("cheptel",$('.cheptel_update #id_update')[0].value,false);
+		}
+		$('.cheptel_insertion #id_insert')[0].onkeyup = function(){
+			findData("cheptel",$('.cheptel_insertion #id_insert')[0].value,true);
+		}
+		document.getElementById('cheptel_inserer').onclick =  function(){bouton("cheptel");}
+		$('.cheptel_insertion #retour')[0].onclick =  function(){bouton("cheptel");}
+		
+		function bouton(table){
+			document.getElementsByClassName(table+"_contenu")[0].innerHTML = "";
+			document.getElementsByClassName(table+"_contenu")[1].innerHTML = "";
+			show_hide_class(table+"_update");
+			show_hide_class(table+"_insertion");
+		}
+		
+		
+		document.getElementById('race').onclick = function(){
+			show_hide_class('race');
+			document.getElementsByClassName('cheptel')[0].style.display = "none";
+		}
+		
+		document.getElementById('cheptel').onclick = function(){
+			show_hide_class('cheptel');
+			document.getElementsByClassName('race')[0].style.display = "none";
+		}
+		
+	</script>
+</body>
+</html>

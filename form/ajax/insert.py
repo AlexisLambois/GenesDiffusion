@@ -47,7 +47,7 @@ def go_insert(request):
         AnimalManager.register(animal_temp)
         addons_animal.append(total[j][0])
         
-    data = (str(write_to_log(addons_animal,addons_cheptel,addons_race,champs_vide)))
+    data = (str(write_to_log(addons_animal,addons_cheptel,addons_race,champs_vide,total[len(total)-1][0])))
     return HttpResponse(data)       
 
 def filename_analyse(filename):
@@ -58,13 +58,13 @@ def filename_analyse(filename):
     except ValueError:
         return "000"
 
-def write_to_log(animal_array,cheptel_array,race_array,champs_vide):
+def write_to_log(animal_array,cheptel_array,race_array,champs_vide,filename):
     
     if not os.path.exists(settings.BASE_DIR+"/media/logs/"):
         os.mkdir(settings.BASE_DIR+"/media/logs/")    
     
     fichier = open(str(settings.BASE_DIR+"/media/logs/log"+time.strftime('%d_%m_%y_%H_%M',time.localtime())), "a")
-    fichier.write("Addons du : " + time.strftime('%d/%m/%y %H:%M',time.localtime()) + "\n")
+    fichier.write("Addons du : " + time.strftime('%d/%m/%y %H:%M',time.localtime()) + " sur fichier " + filename + "\n")
     
     fichier.write("     Ajout/Update Animal : \n")
     for id_animal in animal_array:

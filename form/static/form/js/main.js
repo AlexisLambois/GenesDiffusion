@@ -34,6 +34,32 @@ function saveData(indice,inputs){
 	});
 };
 
+function findData(table,input_id,insert){
+	$.ajax({
+		type: "POST",
+		url: "/ajax/find/",
+		data: {'table': table,'input_id':input_id},
+		success: function(data) {
+			if (!insert){
+				document.getElementsByClassName(table+"_contenu")[0].innerHTML = "";
+				if( data == "Null"){
+					$("<h2 style=\"color:red\" >Aucune correspondance</h2>").appendTo("."+table+"_contenu");
+				}else if( data != "None" ){
+					$("<input type=\"text\" name=\"attribut\" value=\"" + data + "\"\>").appendTo("."+table+"_contenu");
+					$("<input type=\"submit\" value=\"Update\">").appendTo("."+table+"_contenu");
+				}
+			}else{
+				document.getElementsByClassName(table+"_contenu")[1].innerHTML = "";
+				if( data == "Null"){
+					$("<input type=\"submit\" value=\"Insérez-le\">").appendTo("."+table+"_contenu");
+				}else if( data != "None" ){
+					$("<h2 style=\"color:red\" >Id déjà existant</h2>").appendTo("."+table+"_contenu");
+				}
+			}
+		}
+	});
+};
+
 function genere_input(int,id){
 	var text = "";
 	for(var i=0; i<int; i++){

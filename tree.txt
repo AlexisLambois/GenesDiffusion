@@ -3,6 +3,7 @@
 ├── form
 │   ├── admin.py
 │   ├── ajax
+│   │   ├── find.py
 │   │   ├── __init__.py
 │   │   ├── insert.py
 │   │   └── select.py
@@ -44,19 +45,17 @@
 │   │           └── main.js
 │   ├── templates
 │   │   └── form
+│   │       ├── admin.html
 │   │       ├── index.html
 │   │       ├── insert.html
 │   │       └── update.html
 │   ├── urls.py
 │   └── views
+│       ├── admin_view.py
 │       ├── __init__.py
-│       ├── __init__.pyc
 │       ├── insert_view.py
-│       ├── insert_view.pyc
 │       ├── select_view.py
-│       ├── select_view.pyc
-│       ├── update_view.py
-│       └── update_view.pyc
+│       └── update_view.py
 ├── manage.py
 ├── media
 ├── Project
@@ -69,4 +68,4 @@
 ├── script.sql
 └── tree.txt
 
-14 directories, 55 files
+14 directories, 54 files

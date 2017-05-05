@@ -24,26 +24,40 @@ class DatabaseManager(object):
 		DatabaseManager.cursor.close()
 		DatabaseManager.pg_conn.close()
 
+	#----------------------------------------------------------PRELEVEURS----------------------------------------------------------#
+
 	@staticmethod
 	def select_all_preleveurs():
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM preleveur;")
+		DatabaseManager.cursor.execute("SELECT * FROM form_preleveur;")
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
 	@staticmethod
-	def select_preleveur_by_numero(numero):
+	def select_preleveur_by_alpha(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM preleveur WHERE numero='"+str(numero)+"';")
-		data = DatabaseManager.cursor.fetchone()
+		requete = "SELECT * FROM form_preleveur WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
 	@staticmethod
-	def select_preleveurs_by_nom(nom):
+	def select_preleveur_by_beta(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM preleveur WHERE nom='"+str(nom)+"';")
+		requete = "SELECT * FROM form_preleveur WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + "='" + valeur + "' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
@@ -51,13 +65,15 @@ class DatabaseManager(object):
 	@staticmethod
 	def register_preleveur(numero, nom=''):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("INSERT INTO preleveur(numero, nom) \
+		DatabaseManager.cursor.execute("INSERT INTO form_preleveur(numero, nom) \
 		VALUES('"+str(numero)+"', '"+str(nom)+"') \
 		ON CONFLICT(numero) DO UPDATE \
 		SET numero='"+str(numero)+"', nom='"+str(nom)+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
 
+	#----------------------------------------------------------RACES----------------------------------------------------------#
+    
 	@staticmethod
 	def select_all_races():
 		DatabaseManager.open_connexion()
@@ -65,23 +81,35 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
 	@staticmethod
-	def select_race_by_numero(numero):
+	def select_race_by_alpha(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_race WHERE numero='"+str(numero)+"';")
-		data = DatabaseManager.cursor.fetchone()
-		DatabaseManager.close_connexion()
-		return data
-
-	@staticmethod
-	def select_race_by_nom(nom):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_race WHERE nom='"+str(nom)+"';")
+		requete = "SELECT * FROM form_race WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
+	@staticmethod
+	def select_race_by_beta(tosql):
+		if not tosql : return []
+		DatabaseManager.open_connexion()
+		requete = "SELECT * FROM form_race WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + "='" + valeur + "' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
 	@staticmethod
 	def register_race(numero, nom=''):
 		DatabaseManager.open_connexion()
@@ -91,6 +119,8 @@ class DatabaseManager(object):
 		SET numero='"+str(numero)+"', nom='"+str(nom)+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
+		
+	#----------------------------------------------------------CHEPTELS----------------------------------------------------------#
 
 	@staticmethod
 	def select_all_cheptels():
@@ -99,19 +129,31 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
 	@staticmethod
-	def select_cheptel_by_numero(numero):
+	def select_cheptel_by_alpha(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_cheptel WHERE numero='"+str(numero)+"';")
-		data = DatabaseManager.cursor.fetchone()
+		requete = "SELECT * FROM form_cheptel WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
 	@staticmethod
-	def select_cheptel_by_detenteur(detenteur):
+	def select_cheptel_by_beta(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_cheptel WHERE detenteur='"+str(detenteur)+"';")
+		requete = "SELECT * FROM form_cheptel WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + "='" + valeur + "' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
@@ -125,6 +167,8 @@ class DatabaseManager(object):
 		SET numero='"+str(numero)+"', detenteur='"+str(detenteur)+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
+		
+	#----------------------------------------------------------ANIMALS----------------------------------------------------------#
 
 	@staticmethod
 	def select_all_animals():
@@ -135,89 +179,29 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_animal_by_numero(numero):
+	def select_animal_by_alpha(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE numero='"+str(numero)+"';")
-		data = DatabaseManager.cursor.fetchone()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_animal_by_nom(nom):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE nom='"+str(nom)+"';")
-		data = DatabaseManager.cursor.fetchone()
-		DatabaseManager.close_connexion()
-		return data	
-		
-	@staticmethod
-	def select_animals_by_sexe(sexe):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE sexe='"+str(sexe)+"';")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-		
-	@staticmethod
-	def select_animals_by_date_naissance(date_naissance):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE date_naissance='"+str(date_naissance)+"';")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-
-	@staticmethod
-	def select_animals_by_pere(pere):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE pere='"+str(pere)+"';")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-
-	@staticmethod
-	def select_animals_by_mere(mere):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE mere='"+str(mere)+"';")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-
-	@staticmethod
-	def select_animals_by_pays(pays):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE pays='"+str(pays)+"'")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-
-	@staticmethod
-	def select_animals_by_race(race):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE race_id='"+str(race)+"';")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-
-	@staticmethod
-	def select_animals_by_cheptel(cheptel):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE cheptel_id='"+str(cheptel)+"';")
+		requete = "SELECT * FROM form_animal WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle+" LIKE '"+valeur+"%' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
 	
 	@staticmethod
-	def select_animals_by_ordre(ordre):
+	def select_animal_by_beta(tosql):
+		if not tosql : return []
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE ordre='"+str(ordre)+"';")
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_animals_by_date_insertion(date_insertion):
-		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_animal WHERE date_insertion='"+str(date_insertion)+"';")
+		requete = "SELECT * FROM form_animal WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle+"='"+valeur+"' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
@@ -232,5 +216,53 @@ class DatabaseManager(object):
 		SET numero='"+str(numero)+"', nom='"+str(nom)+"', sexe='"+str(sexe)+"', race_id='"+str(race.get_numero())+"', \
 		date_naissance='"+str(date_naissance)+"', pere='"+str(pere)+"', mere='"+str(mere)+"', \
 		jumeau='"+str(jumeau)+"', pays='"+str(pays)+"', cheptel_id='"+str(cheptel.get_numero())+"', ordre='"+str(ordre)+"', date_insertion='"+str(date_insertion)+"';")
+		DatabaseManager.pg_conn.commit()
+		DatabaseManager.close_connexion()
+		
+	#----------------------------------------------------------PRELEVEURS----------------------------------------------------------#
+
+	@staticmethod
+	def select_all_prelevements():
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("SELECT * FROM form_prelevement;")
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
+	@staticmethod
+	def select_prelevement_by_alpha(tosql):
+		if not tosql : return []
+		DatabaseManager.open_connexion()
+		requete = "SELECT * FROM form_prelevement WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
+	@staticmethod
+	def select_prelevement_by_beta(tosql):
+		if not tosql : return []
+		DatabaseManager.open_connexion()
+		requete = "SELECT * FROM form_prelevement WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + "='" + valeur + "' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+
+	@staticmethod
+	def register_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vgc,preleveur,animal):
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vgc,preleveur_id,animal_id) \
+		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(date_enregistrement)+"', '"+str(date_demande)+"', '"+str(date_extraction)+"', '"+str(date_reception_lille)+"', '"+str(type_materiel)+"', '"+str(dosage)+"', '"+str(conformite_dosage)+"', '"+str(code_barre)+"', '"+str(nombre_extraction)+"', '"+str(echec_extraction)+"', '"+str(statut_vgc)+"', '"+str(preleveur)+"', '"+str(animal)+"') \
+		ON CONFLICT(numero) DO UPDATE \
+		SET plaque='"+str(plaque)+"', position='"+str(position)+"', date_enregistrement='"+str(date_enregistrement)+"', date_demande='"+str(date_demande)+"', date_extraction='"+str(date_extraction)+"', date_reception_lille='"+str(date_reception_lille)+"', type_materiel='"+str(type_materiel)+"', dosage='"+str(dosage)+"', conformite_dosage='"+str(conformite_dosage)+"', code_barre='"+str(code_barre)+"', nombre_extraction='"+str(nombre_extraction)+"', echec_extraction='"+str(echec_extraction)+"', statut_vgc='"+str(statut_vgc)+"', preleveur_id='"+str(preleveur)+"', animal_id='"+str(animal)+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()

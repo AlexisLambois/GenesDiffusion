@@ -7,8 +7,10 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from ..manager.racemanager import RaceManager
 from ..manager.cheptelmanager import CheptelManager
+from ..manager.preleveurmanager import PreleveurManager
 from ..models.race import Race
 from ..models.cheptel import Cheptel
+from form.models.preleveur import Preleveur
 import os,time
 from django.conf import settings
 
@@ -19,11 +21,14 @@ def admin_view(request):
         id = request.POST.get('input')
         table = request.POST.get('table')
         attribut = request.POST.get('attribut')
-        print(request.POST)
+        
         if table == "race":
             RaceManager.register(Race.create(id,attribut.upper()))
-        else:
+        elif table == "cheptel":
             CheptelManager.register(Cheptel.create(id,attribut.upper()))
+        else:
+            PreleveurManager.register(Preleveur.create(id, attribut.upper()))
+            
         
         write_to_log(table,id,attribut)
     return render(request,'form/admin.html',{})

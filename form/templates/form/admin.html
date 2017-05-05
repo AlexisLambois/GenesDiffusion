@@ -17,6 +17,7 @@
 		<center>
 			<a id="race">Admin Race</a>
 			<a id="cheptel">Admin Cheptel</a>
+			<a id="preleveur">Admin Preleveur</a>
 		</center>
 		
 		<div class="race" style="display:none">
@@ -93,6 +94,43 @@
 			</div>
 		</div>
 		
+		<div class="preleveur" style="display:none" >
+			<h2>Preleveur</h2>
+			<div class="preleveur_update">
+				<form  enctype="multipart/form-data" action="" method="post">
+					<label>Id Numéro : </label>
+					<input id="id_update" name="input" type="text"/>
+					<input name="table" value="preleveur" type="hidden"/>
+					<br><br>
+					<label>Nom : </label>
+					<div class="preleveur_contenu">
+				
+					</div>
+					<br>
+				</form>
+				<label>Votre Id n'existe pas ? </label>
+		  		<input type="button" id="preleveur_inserer" value="Insérez-le"/>
+			</div>
+			<br>
+		  	<div class="preleveur_insertion" style="display:none">
+		  		<label>Retour a l'update ?</label>
+		  		<input type="button" id="retour" value="Retour"/>
+		  		<br><br>
+				<form  enctype="multipart/form-data" action="" method="post">
+					<label>Id Numéro : </label>
+					<input id="id_insert" name="input" type="text"/>
+					<input name="table" value="preleveur" type="hidden"/>
+					<br><br>
+					<label>Nom : </label>
+					<input name="attribut" type="text"/>
+					<br><br>
+					<div class="preleveur_contenu">
+				
+					</div>
+				</form>
+			</div>
+		</div>
+		
 	</div>
 	
 	<script type="text/javascript">
@@ -116,22 +154,39 @@
 		document.getElementById('cheptel_inserer').onclick =  function(){bouton("cheptel");}
 		$('.cheptel_insertion #retour')[0].onclick =  function(){bouton("cheptel");}
 		
+		$('.preleveur_update #id_update')[0].onkeyup = function(){
+			console.log()
+			findData("preleveur",$('.preleveur_update #id_update')[0].value,false);
+		}
+		$('.preleveur_insertion #id_insert')[0].onkeyup = function(){
+			findData("preleveur",$('.preleveur_insertion #id_insert')[0].value,true);
+		}
+		document.getElementById('preleveur_inserer').onclick =  function(){bouton("preleveur");}
+		$('.preleveur_insertion #retour')[0].onclick =  function(){bouton("preleveur");}
+		
 		function bouton(table){
 			document.getElementsByClassName(table+"_contenu")[0].innerHTML = "";
 			document.getElementsByClassName(table+"_contenu")[1].innerHTML = "";
 			show_hide_class(table+"_update");
 			show_hide_class(table+"_insertion");
 		}
-		
-		
+			
 		document.getElementById('race').onclick = function(){
 			show_hide_class('race');
 			document.getElementsByClassName('cheptel')[0].style.display = "none";
+			document.getElementsByClassName('preleveur')[0].style.display = "none";
 		}
 		
 		document.getElementById('cheptel').onclick = function(){
 			show_hide_class('cheptel');
 			document.getElementsByClassName('race')[0].style.display = "none";
+			document.getElementsByClassName('preleveur')[0].style.display = "none";
+		}
+		
+		document.getElementById('preleveur').onclick = function(){
+			show_hide_class('preleveur');
+			document.getElementsByClassName('race')[0].style.display = "none";
+			document.getElementsByClassName('cheptel')[0].style.display = "none";
 		}
 		
 	</script>

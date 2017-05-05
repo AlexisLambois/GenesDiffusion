@@ -19,10 +19,18 @@
 		<form  enctype="multipart/form-data" action="" method="post">
     		{% csrf_token %}
     		<input type="file" name="myfile" id="file" required>
+    		<SELECT name="table" size="1">
+				<OPTION>Animal
+				<OPTION>Prelevement
+			</SELECT>
     		<input type="submit" value="Check"/>
 		</form>
 		
 		<br>
+		<table>
+			<tr><td><p>Champs modifié : </p></td><td><p id="carre" style="background-color:#FE9A2E"></p></td></tr>
+			<tr><td><p>Champs faux : </p></td><td><p id="carre" style="background-color: #F5A9BC"></p></td></tr>
+		</table>
 		
 		<div class="data_tab">
 			{% if data %}	
@@ -44,6 +52,12 @@
 	</div>
 	
 	<script type="text/javascript">show_hide_class("valider")</script>
+	
+	{% if data_changed %}	
+		<script type="text/javascript">
+			color_changed_data({{ data_changed|safe }});
+		</script>
+	{% endif %}
 	
 	{% if  error_data %}	
 		<script type="text/javascript">

@@ -1,8 +1,8 @@
 #! /usr/bin/python
 #-*- coding:UTF8 -*-
 
-from ..models.cheptel import *
-from .databasemanager import *
+from ..models.cheptel import Cheptel
+from .databasemanager import DatabaseManager
 
 def row_to_cheptel(row):
     return Cheptel(row[0], row[1])
@@ -15,11 +15,11 @@ class CheptelManager(object):
             raise TypeError("L'objet n'est pas un Cheptel")
         DatabaseManager.register_cheptel(cheptel.get_numero(), cheptel.get_detenteur())
 
-    @staticmethod
-    def delete(cheptel):
-        if not isinstance(cheptel, Cheptel):
-            raise TypeError("L'objet n'est pas de type Cheptel")
-        DatabaseManager.delete_cheptel(cheptel.get_numero())
+    #@staticmethod
+    #def delete(cheptel):
+    #    if not isinstance(cheptel, Cheptel):
+    #        raise TypeError("L'objet n'est pas de type Cheptel")
+    #    DatabaseManager.delete_cheptel(cheptel.get_numero())
 
     @staticmethod
     def get_all_cheptels():
@@ -30,18 +30,17 @@ class CheptelManager(object):
         return data
 
     @staticmethod
-    def get_cheptel_by_detenteur(detenteur):
+    def get_cheptel_by_alpha(tosql):
         cheptels = []
-        data = DatabaseManager.select_cheptel_by_detenteur(detenteur)
+        data = DatabaseManager.select_cheptel_by_alpha(tosql)
         for row in data:
             cheptels.append(row_to_cheptel(row))
         return cheptels
-
+    
     @staticmethod
-    def get_cheptel_by_numero(numero):
+    def get_cheptel_by_beta(tosql):
         cheptels = []
-        row = DatabaseManager.select_cheptel_by_numero(numero)
-        if row:
+        data = DatabaseManager.select_cheptel_by_beta(tosql)
+        for row in data:
             cheptels.append(row_to_cheptel(row))
-            return cheptels
-        return []
+        return cheptels

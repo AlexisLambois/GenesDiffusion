@@ -20,6 +20,7 @@ def go_insert(request):
     total = []
     i = 1
     
+    #Recuperation des donnees
     while True:
         data = request.POST.getlist('data['+str(i)+'][]')
         total.append(data)
@@ -27,32 +28,40 @@ def go_insert(request):
         if not len(data) != 0: break
     total.pop()
 
+    #Traitements des donnees
     for j in range(0,len(total)-1):
         
+        #Reperage champs vide
         for colonne in range(0,len(total[j])):
             if(total[j][colonne] == ""):
                 total[j][colonne] = 0
                 champs_vide.append("Champs ligne : " + str(j+1) + " colonne : " + str(colonne+1))
                 
-        if(len(RaceManager.get_race_by_numero(total[j][8])) == 0):
+        #Recuperation du champs race
+        if(len(RaceManager.get_race_by_alpha({"numero":total[j][8]})) == 0):
             RaceManager.register(Race.create(total[j][8],total[j][9]))
             if total[j][8] not in addons_race : addons_race.append(total[j][8])
             
-        if(len(CheptelManager.get_cheptel_by_numero(total[j][10])) == 0):
+        #Recuperation du champs race    
+        if(len(CheptelManager.get_cheptel_by_alpha({"numero":total[j][10]})) == 0):
             CheptelManager.register(Cheptel.create(total[j][10],total[j][11]))
             if total[j][10] not in addons_cheptel : addons_cheptel.append(total[j][10])
         
+        #Recuperation ordre dans titre fichier
         ordre = filename_analyse(total[len(total)-1][0])
+        
+        #Creation et insertion animal
         animal_temp = Animal.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][10],ordre,time.strftime('%d-%m-%y',time.localtime()))
         AnimalManager.register(animal_temp)
         addons_animal.append(total[j][0])
         
+    #Ecriture en log des ajouts fait
     data = (str(write_to_log(addons_animal,addons_cheptel,addons_race,champs_vide,total[len(total)-1][0])))
     return HttpResponse(data)       
 
 def filename_analyse(filename):
     try:
-        ordre = str(filename[filename.index('_')+1:filename.index('_')+2])
+        ordre = str(filename[filename.index('_')+1:filename.index('.')])
         if re.match(r"^[0-9]+$",ordre) is not None : 
             return ordre
     except ValueError:

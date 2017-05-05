@@ -2,11 +2,12 @@ import json,collections,os,time,csv
 from django.http import HttpResponse
 from ..manager.animalmanager import AnimalManager
 from ..manager.racemanager import RaceManager
-from ..manager.cheptelmanager import CheptelManager
-from ..models.animal import Animal
+from ..models.race import Race
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from form.manager.cheptelmanager import CheptelManager
 
+tab_entete = ["ordre","date_insertion","numero","nom","sexe","date_naissance","pere","mere","pays","jumeau","race_id","nom","cheptel_id","detenteur"]
 
 def go_select(request):
        
@@ -15,45 +16,38 @@ def go_select(request):
         indice.append(int(i))
     inputs = request.GET.getlist('inputs[]')
        
-    text = ""
+    text = []
     if len(indice) == 0:
+
         temp = AnimalManager.get_all_animals()
+        
         if request.GET.get('ordre') == "true": 
             temp = sort_by_ordre(temp)
         for row in temp:
-            text += row.to_html()
+            text.append(row.to_array())
     else:
-        numBovin = []
-     
-        for row1 in saisieByIndice(indice[0],inputs[indice[0]]):
-            if not isinstance(row1, Animal):
-                for row2 in row1:                         
-                    numBovin.append(row2.get_numero())   
-            else:
-                numBovin.append(row1.get_numero())   
-                          
-            for i in range(1,len(indice)):
-                var = []
-                for row1 in saisieByIndice(indice[i],inputs[indice[i]]):
-                    if not isinstance(row1, Animal):
-                        for row2 in row1:                                  
-                            if row2.get_numero() in numBovin:
-                                var.append(row2.get_numero())
-                    else:
-                        if row1.get_numero() in numBovin:
-                            var.append(row1.get_numero())                                   
-                numBovin = var             
-                                   
-        animals = []
-        for y in numBovin:
-            animals.append(AnimalManager.get_animal_by_numero(y)[0])
+        tosql = {}
         
-        if request.GET.get('ordre') == "true": 
-            animals = sort_by_ordre(animals)                     
-        for j in animals:                      
-            text += j.to_html()
-                                
-    data = json.dumps(str(text))
+        for id in indice:
+            if id == 11 :
+                races = RaceManager.get_race_by_alpha({tab_entete[id]:inputs[id]})
+                for race in races:  
+                    tosql.update({"race_id":race.get_numero()})
+            elif id == 13 :
+                cheptels = CheptelManager.get_cheptel_by_alpha({tab_entete[id]:inputs[id]})
+                for cheptel in cheptels:  
+                    tosql.update({"cheptel_id":cheptel.get_numero()})
+            else:
+                tosql.update({tab_entete[id]:inputs[id]})
+        animals = AnimalManager.get_animal_by_alpha(tosql)
+        
+        if request.GET.get('ordre') == "true":
+            animals = sort_by_ordre(animals)
+        
+        for animal in animals:
+            text.append(animal.to_array())
+            
+    data = json.dumps(text)
     return HttpResponse(data, content_type='application/json')
 
 @csrf_exempt
@@ -67,30 +61,24 @@ def go_save(request):
     if len(indice) == 0:
         animals = AnimalManager.get_all_animals()
     else:
-        numBovin = []
-
-        for row1 in saisieByIndice(indice[0],inputs[indice[0]]):
-            if not isinstance(row1, Animal):
-                for row2 in row1:                         
-                    numBovin.append(row2.get_numero())   
+        tosql = {}
+        
+        for id in indice:
+            if id == 11 :
+                races = RaceManager.get_race_by_alpha({tab_entete[id]:inputs[id]})
+                for race in races:  
+                    tosql.update({"race_id":race.get_numero()})
+            elif id == 13 :
+                cheptels = CheptelManager.get_cheptel_by_alpha({tab_entete[id]:inputs[id]})
+                for cheptel in cheptels:  
+                    tosql.update({"cheptel_id":cheptel.get_numero()})
             else:
-                numBovin.append(row1.get_numero())   
-
-        for i in range(1,len(indice)):
-            var = []
-            for row1 in saisieByIndice(indice[i],inputs[indice[i]]):
-                if not isinstance(row1, Animal):
-                    for row2 in row1:                                  
-                        if row2.get_numero() in numBovin:
-                            var.append(row2.get_numero())
-                else:
-                    if row1.get_numero() in numBovin:
-                        var.append(row1.get_numero())                                   
-            numBovin = var             
-
-        for y in numBovin:
-            animals.append(AnimalManager.get_animal_by_numero(y)[0])
+                tosql.update({tab_entete[id]:inputs[id]})
+        animals = AnimalManager.get_animal_by_alpha(tosql)
     
+        if request.GET.get('ordre') == "true":
+            animals = sort_by_ordre(animals)
+
     data = write_to_file(animals)
     return HttpResponse(data)  
 
@@ -109,60 +97,6 @@ def write_to_file(data):
     w_file.close()    
 
     return str(settings.BASE_DIR+"/media/save/save"+time.strftime('%d_%m_%y_%H_%M',time.localtime()))
-
-def zero(string):
-    return AnimalManager.get_animals_by_ordre(string)
-def one(string):
-    return AnimalManager.get_animals_by_date_insertion(string)
-def two(string):
-    return AnimalManager.get_animal_by_numero(string)
-def three(string):
-    return AnimalManager.get_animal_by_nom(string)
-def four(string):
-    return AnimalManager.get_animals_by_sexe(string)
-def five(string):
-    return AnimalManager.get_animals_by_date_naissance(string)
-def six(string):
-    return AnimalManager.get_animals_by_pere(string)
-def seven(string):
-    return AnimalManager.get_animals_by_mere(string)
-def eight(string):
-    return AnimalManager.get_animals_by_pays(string)
-def nine(string):
-    return AnimalManager.get_all_animals()
-def ten(string):
-    return AnimalManager.get_animals_by_id_race(string)
-def eleven(string):
-    id_animal = []
-    for race in RaceManager.get_race_by_nom(string):
-        id_animal.append(AnimalManager.get_animals_by_id_race(race.get_numero()))
-    return id_animal       
-def twelve(string):
-    return AnimalManager.get_animals_by_id_cheptel(string)
-def thirteen(string):
-    id_animal = []
-    for cheptel in CheptelManager.get_cheptel_by_detenteur(string):
-        id_animal.append(AnimalManager.get_animals_by_id_cheptel(cheptel.get_numero()))
-    return id_animal
-
-def saisieByIndice(indice,string):
-    options = {
-              0 : zero,
-              1 : one,
-              2 : two,
-              3 : three,
-              4 : four,
-              5 : five,
-              6 : six,
-              7 : seven,
-              8 : eight,
-              9 : nine,
-              10 : ten,
-              11 : eleven,
-              12 : twelve,
-              13 : thirteen 
-    } 
-    return options[indice](string)  
 
 def sort_by_ordre(tab_animal):
     temp = {}

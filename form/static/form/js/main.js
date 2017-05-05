@@ -5,7 +5,6 @@ function getAnimal(indice,inputs){
 		data: {'indice': indice,'inputs':inputs,'ordre':document.getElementById('myonoffswitch').checked},
 		success: function(data) {
 			affiche_tab(data,"#tab1");
-			return data
 		}
 	});
 };
@@ -146,7 +145,6 @@ function search_error(error_tab){
 }
 
 function color_changed_data(changed_data){
-	
 	for (var i = 0; i < changed_data.length; i++) {
 		var ligne = document.getElementById(i+1+"")
 		for (var j = 0; j < changed_data[i].length; j++) {
@@ -155,9 +153,23 @@ function color_changed_data(changed_data){
 	}
 }
 
-function affiche_tab(donne,div){
+function affiche_tab(data,div){
 	$("<table class=\"data\" >").appendTo(div);
-	$(donne).appendTo(div+" table");
+	text = ""
+	for (var i = 0; i < data.length; i++) {
+		text+="<tr>";
+		for (var j = 0; j < data[i].length; j++) {
+			if(j < 10){
+				text+="<td class=\"animal\">"+data[i][j]+"</td>";
+			}else if( j == 10 || j == 11){
+				text+="<td class=\"race\">"+data[i][j]+"</td>";
+			}else if( j == 12 || j == 13){
+				text+="<td class=\"cheptel\">"+data[i][j]+"</td>";
+			}
+		}
+		text+="</tr>";
+	}
+	$(text).appendTo(div+" table");
 }
 
 function getCookie(name) {
@@ -166,7 +178,6 @@ function getCookie(name) {
         var cookies = document.cookie.split(';');
         for (var i = 0; i < cookies.length; i++) {
             var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) == (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;

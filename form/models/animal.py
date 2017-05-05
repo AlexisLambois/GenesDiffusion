@@ -31,8 +31,8 @@ class Animal(models.Model):
             mere = mere,
             jumeau = jumeau,
             pays = pays,
-            cheptel = CheptelManager.get_cheptel_by_numero(cheptel)[0],
-            race = RaceManager.get_race_by_numero(race)[0],
+            cheptel = CheptelManager.get_cheptel_by_alpha({"numero":cheptel})[0],
+            race = RaceManager.get_race_by_alpha({"numero":race})[0],
             ordre = ordre,
             date_insertion = date_insertion
             )
@@ -117,7 +117,7 @@ class Animal(models.Model):
     #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
     
     def to_array(self):
-        return [self.get_numero(),self.get_nom(),self.get_sexe(),self.get_date_naissance(),self.get_pere(),self.get_mere(),self.get_pays(),self.get_jumeau()] + self.get_race().to_array() + self.get_cheptel().to_array()
+        return [self.get_ordre(),str(self.get_date_insertion()),self.get_numero(),self.get_nom(),self.get_sexe(),str(self.get_date_naissance()),self.get_pere(),self.get_mere(),self.get_pays(),str(self.get_jumeau())] + self.get_race().to_array() + self.get_cheptel().to_array()
         
     def to_string(self):
         return  (" Animal : "+self.get_numero()+"\t"+self.get_nom()+"\t"+self.get_sexe()+"\t"+str(self.get_date_naissance())+"\t"+self.get_pere()+"\t"+self.get_mere()+"\t"+str(self.get_jumeau())+"\t"+self.get_pays()+"\t"+self.cheptel.to_string()+"\t"+self.race.to_string()+"\t"+self.get_ordre()+"\t"+str(self.get_date_insertion())+"\n")    

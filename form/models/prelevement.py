@@ -153,6 +153,7 @@ class Prelevement(models.Model):
         
     def set_preleveur(self,preleveur):
         self.preleveur = preleveur
+        
     #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
     
     def to_array(self):

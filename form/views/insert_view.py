@@ -36,15 +36,18 @@ def insert_view(request):
             data.append([myfile.name])
             data.append([table])
           
-            if table.lower() == "animal":
+            if table.lower() == "animal" and len(data[0]) == 10 :
                 data_changed = find_data_changed_animal(data)
                 for row_number in range(1,len(data)-2):
                     error_data.append(dara_row_verif_animal(data[row_number]))
-            else:
+            elif table.lower() == "prelevement" and len(data[0]) == 15:
                 data_changed = find_data_changed_prelev(data)
                 for row_number in range(1,len(data)-2):
                     error_data.append(dara_row_verif_prele(data[row_number]))
-                    
+            else:
+                data = []
+                error_data = []
+                data_changed = []  
         return render(request, 'form/insert.html', {
             'error_data' : error_data,
             'data' : json.dumps(data),
@@ -82,7 +85,7 @@ def data_gather(filename):
         for row in ws.rows:
             temp = []
             for cell in row:
-               temp.append(cell.value)
+                temp.append(cell.value)
             data.append(temp)
     return data
 
@@ -144,7 +147,6 @@ def dara_row_verif_animal(row):
 
 def dara_row_verif_prele(row):
     tab_validation = []
-    print(row)
     if re.match(r"^[A-Z0-9]{9,23}$",str(row[0]).upper()) is None :  tab_validation.append(0)
     if re.match(r"^[0-9]{0,3}$",str(row[1]).upper()) is None :  tab_validation.append(1)
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[2]).upper()) is None :  tab_validation.append(2)

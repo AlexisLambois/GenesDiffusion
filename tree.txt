@@ -14,6 +14,7 @@
 │   │   ├── animalmanager.py
 │   │   ├── cheptelmanager.py
 │   │   ├── databasemanager.py
+│   │   ├── genotypagemanager.py
 │   │   ├── __init__.py
 │   │   ├── prelevementmanager.py
 │   │   ├── preleveurmanager.py
@@ -24,6 +25,7 @@
 │   ├── models
 │   │   ├── animal.py
 │   │   ├── cheptel.py
+│   │   ├── genotypage.py
 │   │   ├── __init__.py
 │   │   ├── prelevement.py
 │   │   ├── preleveur.py
@@ -66,4 +68,4 @@
 ├── script.sql
 └── tree.txt
 
-16 directories, 50 files
+16 directories, 52 files

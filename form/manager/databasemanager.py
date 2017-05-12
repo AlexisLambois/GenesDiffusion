@@ -224,7 +224,7 @@ class DatabaseManager(object):
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
 		
-	#----------------------------------------------------------PRELEVEURS----------------------------------------------------------#
+	#----------------------------------------------------------PRELEVEMENTS----------------------------------------------------------#
 
 	@staticmethod
 	def select_all_prelevements():
@@ -247,7 +247,6 @@ class DatabaseManager(object):
 				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
-		print(requete)
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
@@ -276,3 +275,56 @@ class DatabaseManager(object):
 		SET plaque='"+str(plaque)+"', position='"+str(position)+"', date_enregistrement='"+str(date_enregistrement)+"', date_demande='"+str(date_demande)+"', date_extraction='"+str(date_extraction)+"', date_reception_lille='"+str(date_reception_lille)+"', type_materiel='"+str(type_materiel)+"', dosage='"+str(dosage)+"', conformite_dosage='"+str(conformite_dosage)+"', code_barre='"+str(code_barre)+"', nombre_extraction='"+str(nombre_extraction)+"', echec_extraction='"+str(echec_extraction)+"', statut_vcg='"+str(statut_vcg)+"', date_insertion='"+str(date_insertion)+"', animal_id='"+str(animal.get_numero())+"', preleveur_id='"+str(preleveur.get_numero())+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
+		
+	#----------------------------------------------------------GENOTYPAGES----------------------------------------------------------#
+
+	@staticmethod
+	def select_all_genotypages():
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("SELECT * FROM form_genotypages;")
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
+	@staticmethod
+	def select_genotypages_by_alpha(tosql):
+		if not tosql : return []
+		DatabaseManager.open_connexion()
+		requete = "SELECT * FROM form_genotypages WHERE "
+		for cle, valeur in tosql.items():
+			if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
+				valeur = valeur[0] + valeur[1:len(valeur)].lower()
+				requete += str(cle + "='" + str(valeur) + "' AND ")
+			else:
+				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
+	@staticmethod
+	def select_genotypages_by_beta(tosql):
+		if not tosql : return []
+		DatabaseManager.open_connexion()
+		requete = "SELECT * FROM form_genotypages WHERE "
+		for cle, valeur in tosql.items():
+			requete += str(cle + "='" + str(valeur) + "' AND ")
+		requete = requete[0:-4]
+		requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+
+	@staticmethod
+	def register_genotypage(plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note):
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note) \
+		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(format_puce)+"', '"+str(date_debut)+"', '"+str(date_scan)+"', '"+str(callrate)+"', '"+str(link_to_file)+"', '"+str(note)+"') \
+		ON CONFLICT(plaque,position) DO UPDATE \
+		SET plaque='"+str(plaque)+"', position='"+str(position)+"', format_puce='"+str(format_puce)+"', date_debut='"+str(date_debut)+"', date_scan='"+str(date_scan)+"', callrate='"+str(callrate)+"', link_to_file='"+str(link_to_file)+"', note='"+str(note)+"';")
+		DatabaseManager.pg_conn.commit()
+		DatabaseManager.close_connexion()
+

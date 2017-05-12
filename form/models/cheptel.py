@@ -36,10 +36,6 @@ class Cheptel(models.Model):
     
     def to_string(self):
         return str(self.get_numero())+"\t"+str(self.get_detenteur())
-    
-    def to_html(self):
-        text = "<td class=\"cheptel\">"+str(self.get_numero())+"</td>"
-        text+="<td class=\"cheptel\">"+str(self.get_detenteur())+"</td>"
-        return format_html(text)    
+   
         
     

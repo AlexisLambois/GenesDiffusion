@@ -1,65 +1,52 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8">
 	{% load static %}
-	<title>Page 1</title>
-    <link href="{% static "form/css/style.css" %}" type="text/css" rel="stylesheet" />
+	<title>Page Print</title>
+    <link href="{% static "form/css/style2.css" %}" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
 </head>
 <body>
-
+	
 	<div class="container">
-		<center>
-<!-- 			<a href="#" onclick=show_hide_class("prelevement")>Show Prelevement</a> -->
-<!-- 			<a href="#" onclick=show_hide_class("preleveur")>Show Preleveur</a> -->
-			<a href="#" onclick=show_hide_class("animal")>Show Animal</a>
-			<a href="#" onclick=show_hide_class("race")>Show Race</a>
-			<a href="#" onclick=show_hide_class("cheptel")>Show Cheptel</a>
-			<br>
-			<br>
-			<a href="#" id="valider">Enregistrer</a>
-			<br>
-		</center>
+	
+		<a href="#" onclick=swap(0)>Show Prelevement</a> 
+		<a href="#" onclick=swap(2)>Show Animal</a>
+		<a href="#" onclick=swap(3)>Show Cheptel</a>
+		<a href="#" onclick=swap(4)>Show Race</a>
+	 	<a href="#" onclick=swap(1)>Show Preleveur</a> 
 		<br>
-
-		<div class="onoffswitch">
-			<input type="checkbox" name="onoffswitch"
-				class="onoffswitch-checkbox" id="myonoffswitch" checked> <label
-				class="onoffswitch-label" for="myonoffswitch"> <span
-				class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
-			</label>
-		</div>
-
-		<br>
+		<a href="#" id="save">Save</a>
 		
 		<table class="tab_entete data">
 			<tr>
 				<script type="text/javascript">
-				
-// 					document.write(genere_input(13, "prelevement"));
-// 					document.write(genere_input(2, "preleveur"));
+					document.write(genere_input(14, "prelevement"));
 					document.write(genere_input(10, "animal"));
 					document.write(genere_input(2, "race"));
 					document.write(genere_input(2, "cheptel"));
-
+					document.write(genere_input(2, "preleveur"));
 				</script>
 			</tr>
 			<tr>
 				<script type="text/javascript">
-					document.write(genere_champs());
+					document.write(genere_champs_affichage());
 				</script>
 			</tr>
 		</table>
-
-		<div id="tab1">
+		
+		<div id="data">
 			<script type="text/javascript">
-				getAnimal([],[]);
+				getData([],[]);
 			</script>
 		</div>
+
 	</div>
 
 	<script type="text/javascript">
+		
 		document.onkeydown = function(e) {
 			if(e) {
 				if(e.keyCode===13) { 
@@ -70,12 +57,13 @@
 				    	}
 				    }
 				    var indice = indice_change(inputs);
-				    document.getElementById('tab1').innerHTML = "";
-				    getAnimal(indice,inputs);
+				    document.getElementById('data').innerHTML = "";
+				    getData(indice,inputs);
 				}
 			}
 		};
-		document.getElementById('valider').onclick = function(){
+		
+		document.getElementById('save').onclick = function(){
 			var inputs = [];
 		    for (var i = 0 ; i < $('input').length ; i++) {
 		    	if( $('input')[i].type.toLowerCase() == 'text'){
@@ -84,8 +72,8 @@
 		    }
 		    var indice = indice_change(inputs);
 			saveData(indice,inputs);
-		}
+		};
 	</script>
+
 </body>
 </html>
-

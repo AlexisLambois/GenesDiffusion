@@ -2,7 +2,6 @@ import json,collections,os,time,csv
 from django.http import HttpResponse
 from ..manager.animalmanager import AnimalManager
 from ..manager.racemanager import RaceManager
-from ..models.race import Race
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from form.manager.cheptelmanager import CheptelManager
@@ -20,11 +19,10 @@ def go_select(request):
     if len(indice) == 0:
 
         temp = AnimalManager.get_all_animals()
-        
         if request.GET.get('ordre') == "true": 
             temp = sort_by_ordre(temp)
         for row in temp:
-            text.append(row.to_array())
+            text.append(row.to_array_html())
     else:
         tosql = {}
         
@@ -45,7 +43,7 @@ def go_select(request):
             animals = sort_by_ordre(animals)
         
         for animal in animals:
-            text.append(animal.to_array())
+            text.append(animal.to_array_html())
             
     data = json.dumps(text)
     return HttpResponse(data, content_type='application/json')

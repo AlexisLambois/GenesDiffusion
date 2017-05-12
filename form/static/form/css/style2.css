@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+.data{
+	border: 3px solid black;
+	border-collapse: collapse;
+}
+
+.data td{
+	border: 2px solid black;
+	min-width: 130px;
+	max-width: 130px;
+	text-align: center;
+	height: 40px;
+}
+
+.tab_entete input{
+	width:80%;
+}

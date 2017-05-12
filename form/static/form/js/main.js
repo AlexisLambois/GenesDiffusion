@@ -1,10 +1,12 @@
-function getAnimal(indice,inputs){
+function getData(indice,inputs){
 	$.ajax({
 		type: "GET",
-		url: "/ajax/more/",
-		data: {'indice': indice,'inputs':inputs,'ordre':document.getElementById('myonoffswitch').checked},
+//		url: "/ajax/more/",
+		url: "/ajax/printer/",
+//		data: {'indice': indice,'inputs':inputs,'ordre':document.getElementById('myonoffswitch').checked},
+		data: {'indice': indice,'inputs':inputs},
 		success: function(data) {
-			affiche_tab(data,"#tab1");
+			affiche_tab(data,"#data");
 		}
 	});
 };
@@ -59,6 +61,24 @@ function findData(table,input_id,insert){
 	});
 };
 
+//------------------------------------Mise au propre Affichage--------------------------------------------//
+
+show = [true,true,true,true,true];
+
+function swap(integer){
+	if(show[integer]){
+		show[integer]=false;
+	}else{
+		show[integer]=true;
+	}
+	console.log(show);
+	show_hide("prelevement",show[0]);
+	show_hide("preleveur",show[1]);
+	show_hide("animal",show[2]);
+	show_hide("cheptel",show[3]);
+	show_hide("race",show[4]);
+}
+
 function genere_input(int,id){
 	var text = "";
 	for(var i=0; i<int; i++){
@@ -67,33 +87,45 @@ function genere_input(int,id){
 	return text;
 }
 
-function genere_champs(){
+function genere_champs_affichage(){
 	
-	var prelevement = ["Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception  Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
+	var prelevement = ["Date Insertion","Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
 	var preleveur = ["Numero Agrement","Nom"];
 	var animal = ["Ordre","Date Insert/Up","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
 	var race = ["Numero Race","Nom Race"];
 	var cheptel = ["Cheptel Actuel","Detenteur Actuel"];
-
+	
 	var text = "";
-//	for (var i = 0; i < prelevement.length; i++) {
-//		text += "<td class=\"prelevement\">" + prelevement[i] + "</td>";
-//	}
-//	for (var i = 0; i < preleveur.length; i++) {
-//		text += "<td class=\"preleveur\">" + preleveur[i] + "</td>";
-//	}
+	for (var i = 0; i < prelevement.length; i++) {
+		text += "<td class=\"prelevement\">" + prelevement[i] + "</td>";
+	}
 	for (var i = 0; i < animal.length; i++) {
 		text += "<td class=\"animal\">" + animal[i] + "</td>";
-	}
-	for (var i = 0; i < race.length; i++) {
-		text += "<td class=\"race\">" + race[i] + "</td>";
 	}
 	for (var i = 0; i < cheptel.length; i++) {
 		text += "<td class=\"cheptel\">" + cheptel[i] + "</td>";
 	}
+	for (var i = 0; i < race.length; i++) {
+		text += "<td class=\"race\">" + race[i] + "</td>";
+	}
+	for (var i = 0; i < preleveur.length; i++) {
+		text += "<td class=\"preleveur\">" + preleveur[i] + "</td>";
+	}
 	return text;
 }
 
+function show_hide(maclass,bool) {
+	var laclass = document.getElementsByClassName(maclass);
+	for (var i = 0; i < laclass.length ; i++) {
+		if (bool)
+			laclass[i].style.display = "table-cell";
+		else
+			laclass[i].style.display = "none";
+	}
+}
+
+
+//--------------------------------------------------------------------------------------------------------//
 
 function indice_change(inputs){
 	var listid = [];
@@ -122,7 +154,7 @@ function data_to_html(data){
 		text+="<td>"+data[0][h]+"</td>";
 	}
 	text+="</tr>";
-	for (var i = 1; i < data.length-1; i++) {
+	for (var i = 1; i < data.length-2; i++) {
 		text+="<tr id="+i+">";
 		for (var j = 0; j < data[i].length; j++) {
 			text+="<td class="+j+">"+data[i][j]+"</td>";
@@ -159,17 +191,20 @@ function affiche_tab(data,div){
 	for (var i = 0; i < data.length; i++) {
 		text+="<tr>";
 		for (var j = 0; j < data[i].length; j++) {
-			if(j < 10){
-				text+="<td class=\"animal\">"+data[i][j]+"</td>";
-			}else if( j == 10 || j == 11){
-				text+="<td class=\"race\">"+data[i][j]+"</td>";
-			}else if( j == 12 || j == 13){
-				text+="<td class=\"cheptel\">"+data[i][j]+"</td>";
-			}
+			if( j < 14 ){text+="<td class=\"prelevement\">"+data[i][j]+"</td>";}
+			else if( j >= 14 && j < 24){text+="<td class=\"animal\">"+data[i][j]+"</td>";}
+			else if( j >= 24 && j < 26){text+="<td class=\"cheptel\">"+data[i][j]+"</td>";}
+			else if( j >= 26 && j < 28){text+="<td class=\"race\">"+data[i][j]+"</td>";}
+			else if( j >= 28){text+="<td class=\"preleveur\">"+data[i][j]+"</td>";}
 		}
 		text+="</tr>";
 	}
 	$(text).appendTo(div+" table");
+	show_hide("prelevement",show[0]);
+	show_hide("preleveur",show[1]);
+	show_hide("animal",show[2]);
+	show_hide("cheptel",show[3]);
+	show_hide("race",show[4]);
 }
 
 function getCookie(name) {

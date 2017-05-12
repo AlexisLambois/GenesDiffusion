@@ -1,22 +1,18 @@
 #! /usr/bin/python
 #-*- coding:UTF8 -*-
 import time,os,re
-from ..manager.animalmanager import AnimalManager
-from ..manager.racemanager import RaceManager
-from ..manager.cheptelmanager import CheptelManager
-from ..models.animal import Animal
-from ..models.race import Race
-from ..models.cheptel import Cheptel
+from form.manager.animalmanager import AnimalManager
+from form.models.animal import Animal
+from form.models.prelevement import Prelevement
+from form.manager.prelevementmanager import PrelevementManager
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.http import HttpResponse
 
 @csrf_exempt
 def go_insert(request):
-    addons_race = []
-    addons_cheptel = []
     addons_animal = []
-    champs_vide = []
+    addons_prelevement = []
     total = []
     i = 1
     
@@ -27,36 +23,43 @@ def go_insert(request):
         i=i+1 
         if not len(data) != 0: break
     total.pop()
-
-    #Traitements des donnees
-    for j in range(0,len(total)-1):
+    
+    #Recuperation ordre dans titre fichier
+    ordre = filename_analyse(total[len(total)-2][0])
+    table = total[len(total)-1][0]
+    
+    if table.lower() == "animal":
         
-        #Reperage champs vide
-        for colonne in range(0,len(total[j])):
-            if(total[j][colonne] == ""):
-                total[j][colonne] = 0
-                champs_vide.append("Champs ligne : " + str(j+1) + " colonne : " + str(colonne+1))
-                
-        #Recuperation du champs race
-        if(len(RaceManager.get_race_by_alpha({"numero":total[j][8]})) == 0):
-            RaceManager.register(Race.create(total[j][8],total[j][9]))
-            if total[j][8] not in addons_race : addons_race.append(total[j][8])
+        #Traitements des donnees
+        for j in range(0,len(total)-2):
             
-        #Recuperation du champs race    
-        if(len(CheptelManager.get_cheptel_by_alpha({"numero":total[j][10]})) == 0):
-            CheptelManager.register(Cheptel.create(total[j][10],total[j][11]))
-            if total[j][10] not in addons_cheptel : addons_cheptel.append(total[j][10])
+            #Reperage champs vide
+            for colonne in range(0,len(total[j])):
+                if(total[j][colonne] == ""):
+                    total[j][colonne] = 0
+            
+            #Creation et insertion animal
+            animal_temp = Animal.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],ordre,time.strftime('%d-%m-%y',time.localtime()),total[j][8],total[j][9])
+            AnimalManager.register(animal_temp)
+            addons_animal.append(total[j][0])
+            
+    else :
         
-        #Recuperation ordre dans titre fichier
-        ordre = filename_analyse(total[len(total)-1][0])
-        
-        #Creation et insertion animal
-        animal_temp = Animal.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][10],ordre,time.strftime('%d-%m-%y',time.localtime()))
-        AnimalManager.register(animal_temp)
-        addons_animal.append(total[j][0])
-        
+        #Traitements des donnees
+        for j in range(0,len(total)-2):
+            
+            #Reperage champs vide
+            for colonne in range(0,len(total[j])):
+                if(total[j][colonne] == ""):
+                    total[j][colonne] = 0
+            
+            #Creation et insertion prelevement
+            prelev_temp = Prelevement.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][9],total[j][10],total[j][11],total[j][12],time.strftime('%d-%m-%y',time.localtime()),total[j][13],total[j][14])
+            PrelevementManager.register(prelev_temp)
+            addons_prelevement.append(total[j][0])
+               
     #Ecriture en log des ajouts fait
-    data = (str(write_to_log(addons_animal,addons_cheptel,addons_race,champs_vide,total[len(total)-1][0])))
+    data = (str(write_to_log(addons_animal,addons_prelevement,total[len(total)-2][0])))
     return HttpResponse(data)       
 
 def filename_analyse(filename):
@@ -67,7 +70,7 @@ def filename_analyse(filename):
     except ValueError:
         return "000"
 
-def write_to_log(animal_array,cheptel_array,race_array,champs_vide,filename):
+def write_to_log(animal_array,prelevement_array,filename):
     
     if not os.path.exists(settings.BASE_DIR+"/media/logs/"):
         os.mkdir(settings.BASE_DIR+"/media/logs/")    
@@ -79,17 +82,9 @@ def write_to_log(animal_array,cheptel_array,race_array,champs_vide,filename):
     for id_animal in animal_array:
         fichier.write("          Animal numero : " + str(id_animal) + "\n")
     
-    fichier.write("     Ajout/Update Race : \n")
-    for id_race in race_array:
-        fichier.write("          Race numero : " + str(id_race) + "\n")        
-   
-    fichier.write("     Ajout/Update Cheptel : \n")
-    for id_cheptel in cheptel_array:
-        fichier.write("          Cheptel numero : " + str(id_cheptel) + "\n")  
-    
-    fichier.write("     Champs Vide : \n")
-    for champs in champs_vide:
-        fichier.write("          " + champs + "\n")    
-    
+    fichier.write("     Ajout/Update Prelevement : \n")
+    for id_prelev in prelevement_array:
+        fichier.write("          Prelevement numero : " + str(id_prelev) + "\n")
+        
     fichier.close()
     return str(settings.BASE_DIR+"/media/logs/log"+time.strftime('%d_%m_%y_%H_%M',time.localtime()))

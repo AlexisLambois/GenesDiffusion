@@ -1,8 +1,8 @@
-import os, sys, string
+import sys
 
 sys.path.append("/usr/local/lib/python2.7/dist-packages")
 
-import psycopg2
+import psycopg2,re
 
 class DatabaseManager(object):
 	"""Cette classe permet de serialiser un objet en base de donnees"""
@@ -40,7 +40,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_preleveur WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+			requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -54,7 +54,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_preleveur WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + valeur + "' AND ")
+			requete += str(cle + "='" + str(valeur) + "' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -88,7 +88,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_race WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+			requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -102,7 +102,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_race WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + valeur + "' AND ")
+			requete += str(cle + "='" + str(valeur) + "' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -136,7 +136,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_cheptel WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+			requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -150,7 +150,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_cheptel WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + valeur + "' AND ")
+			requete += str(cle + "='" + str(valeur) + "' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -184,9 +184,14 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_animal WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle+" LIKE '"+valeur+"%' AND ")
+			if ((re.match(r"^(FALSE|TRUE)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
+				valeur = valeur[0] + valeur[1:len(valeur)].lower()
+				requete += str(cle + "='" + str(valeur) + "' AND ")
+			else:
+				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
+		print(requete)
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
@@ -198,7 +203,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_animal WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle+"='"+valeur+"' AND ")
+			requete += str(cle+"='"+str(valeur)+"' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -235,9 +240,14 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_prelevement WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + valeur + "%' AND ")
+			if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
+				valeur = valeur[0] + valeur[1:len(valeur)].lower()
+				requete += str(cle + "='" + str(valeur) + "' AND ")
+			else:
+				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
+		print(requete)
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
@@ -249,7 +259,7 @@ class DatabaseManager(object):
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_prelevement WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + valeur + "' AND ")
+			requete += str(cle + "='" + str(valeur) + "' AND ")
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -258,11 +268,11 @@ class DatabaseManager(object):
 		return data
 
 	@staticmethod
-	def register_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vgc,preleveur,animal):
+	def register_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal,preleveur):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vgc,preleveur_id,animal_id) \
-		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(date_enregistrement)+"', '"+str(date_demande)+"', '"+str(date_extraction)+"', '"+str(date_reception_lille)+"', '"+str(type_materiel)+"', '"+str(dosage)+"', '"+str(conformite_dosage)+"', '"+str(code_barre)+"', '"+str(nombre_extraction)+"', '"+str(echec_extraction)+"', '"+str(statut_vgc)+"', '"+str(preleveur)+"', '"+str(animal)+"') \
-		ON CONFLICT(numero) DO UPDATE \
-		SET plaque='"+str(plaque)+"', position='"+str(position)+"', date_enregistrement='"+str(date_enregistrement)+"', date_demande='"+str(date_demande)+"', date_extraction='"+str(date_extraction)+"', date_reception_lille='"+str(date_reception_lille)+"', type_materiel='"+str(type_materiel)+"', dosage='"+str(dosage)+"', conformite_dosage='"+str(conformite_dosage)+"', code_barre='"+str(code_barre)+"', nombre_extraction='"+str(nombre_extraction)+"', echec_extraction='"+str(echec_extraction)+"', statut_vgc='"+str(statut_vgc)+"', preleveur_id='"+str(preleveur)+"', animal_id='"+str(animal)+"';")
+		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal_id,preleveur_id) \
+		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(date_enregistrement)+"', '"+str(date_demande)+"', '"+str(date_extraction)+"', '"+str(date_reception_lille)+"', '"+str(type_materiel)+"', '"+str(dosage)+"', '"+str(conformite_dosage)+"', '"+str(code_barre)+"', '"+str(nombre_extraction)+"', '"+str(echec_extraction)+"', '"+str(statut_vcg)+"', '"+str(date_insertion)+"', '"+str(animal.get_numero())+"', '"+str(preleveur.get_numero())+"') \
+		ON CONFLICT(plaque,position) DO UPDATE \
+		SET plaque='"+str(plaque)+"', position='"+str(position)+"', date_enregistrement='"+str(date_enregistrement)+"', date_demande='"+str(date_demande)+"', date_extraction='"+str(date_extraction)+"', date_reception_lille='"+str(date_reception_lille)+"', type_materiel='"+str(type_materiel)+"', dosage='"+str(dosage)+"', conformite_dosage='"+str(conformite_dosage)+"', code_barre='"+str(code_barre)+"', nombre_extraction='"+str(nombre_extraction)+"', echec_extraction='"+str(echec_extraction)+"', statut_vcg='"+str(statut_vcg)+"', date_insertion='"+str(date_insertion)+"', animal_id='"+str(animal.get_numero())+"', preleveur_id='"+str(preleveur.get_numero())+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()

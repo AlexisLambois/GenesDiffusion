@@ -12,7 +12,7 @@ class Race(models.Model):
         return race       
 
     #----------------------------------------------------------Getter/Setter----------------------------------------------------------#
-     
+    
     def get_numero(self):
         return self.numero
 

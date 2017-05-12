@@ -24,8 +24,6 @@ class Preleveur(models.Model):
         self.numero = numero
 
     def set_nom(self, nom):
-        if nom.strip() == '':
-            raise ValueError("Nom invalide")
         self.nom = nom
 
     #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
@@ -36,9 +34,3 @@ class Preleveur(models.Model):
     def to_array(self):
         return [str(self.get_numero()),str(self.get_nom())]
     
-    def to_html(self):
-        text="<tr>"
-        text+="<td class=\"preleveur\">"+str(self.get_numero())+"</td>"
-        text+="<td class=\"preleveur\">"+str(self.get_nom())+"</td>"
-        text+="</tr>"
-        return format_html(text)

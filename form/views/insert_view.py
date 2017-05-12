@@ -8,10 +8,14 @@ from django.conf import settings
 import csv,re,json
 from django.core.files.storage import FileSystemStorage
 from ..manager.animalmanager import AnimalManager
+from form.manager.cheptelmanager import CheptelManager
+from form.manager.racemanager import RaceManager
 from django.utils.html import format_html
 from django.views.decorators.csrf import csrf_exempt
 from pyexcel_ods import get_data
 from openpyxl import load_workbook
+from form.manager.preleveurmanager import PreleveurManager
+from form.manager.prelevementmanager import PrelevementManager
 
 @csrf_exempt
 def insert_view(request):
@@ -26,12 +30,21 @@ def insert_view(request):
             
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
-            uploaded_file_url = fs.url(filename)   
+            uploaded_file_url = fs.url(filename)
+       
             data = data_gather( settings.BASE_DIR + uploaded_file_url)
             data.append([myfile.name])
-            data_changed = find_data_changed(data)
-            for row_number in range(1,len(data)-1):
-                error_data.append(dara_row_verif(data[row_number]))
+            data.append([table])
+          
+            if table.lower() == "animal":
+                data_changed = find_data_changed_animal(data)
+                for row_number in range(1,len(data)-2):
+                    error_data.append(dara_row_verif_animal(data[row_number]))
+            else:
+                data_changed = find_data_changed_prelev(data)
+                for row_number in range(1,len(data)-2):
+                    error_data.append(dara_row_verif_prele(data[row_number]))
+                    
         return render(request, 'form/insert.html', {
             'error_data' : error_data,
             'data' : json.dumps(data),
@@ -60,7 +73,7 @@ def data_gather(filename):
         mon_fichier.close()
         
     elif extension == ".ods" or extension == ".xls":
-        data = (get_data(filename,start_column=0, column_limit=13)).values()[0]
+        data = (get_data(filename,start_column=0, column_limit=15)).values()[0]
         
     elif extension == ".xlsx":
         data = []
@@ -71,32 +84,51 @@ def data_gather(filename):
             for cell in row:
                temp.append(cell.value)
             data.append(temp)
-    
     return data
 
 #----------------------------------------------------------Traitement----------------------------------------------------------#
 
-def find_data_changed(data):
+def find_data_changed_prelev(data):
     id_data_changed = []
-    for i in range(1,len(data)-1):
-        
-        old_animal = (AnimalManager.get_animal_by_alpha({"numero":data[i][0]})[0]).to_array()
-        temp = []
-        
-        for j in range(0,len(data[i])):
-            split = data[i][j]
+    for i in range(1,len(data)-2):
+  
+        if len(PrelevementManager.get_prelevement_by_beta({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
+            print((PrelevementManager.get_prelevement_by_beta({"plaque":data[i][0],"position":data[i][1]})[0]).get_preleveur())
+            old_prelevement = (PrelevementManager.get_prelevement_by_beta({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
+            temp = []
             
-            if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(data[i][j])) is not None:
-                split = str(split[6:10]+"-"+split[3:5]+"-"+split[0:2])
-           
-            if str(split) != str(old_animal[j+2]):
-                temp.append(j)
+            for j in range(0,len(data[i])):
+                split = data[i][j]
+                if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(data[i][j])) is not None:
+                    split = str(split[6:10]+"-"+split[3:5]+"-"+split[0:2])
                 
-        id_data_changed.append(temp)
-   
+                if str(split) != str(old_prelevement[j]):
+                    temp.append(j)
+                    
+            id_data_changed.append(temp)
     return id_data_changed
 
-def dara_row_verif(row):   
+def find_data_changed_animal(data):
+    id_data_changed = []
+    for i in range(1,len(data)-2):
+        
+        if len(AnimalManager.get_animal_by_alpha({"numero":data[i][0]})) != 0 :  
+            old_animal = (AnimalManager.get_animal_by_alpha({"numero":data[i][0]})[0]).to_array()
+            temp = []
+       
+            for j in range(0,len(data[i])):
+                split = data[i][j]
+                
+                if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(data[i][j])) is not None:
+                    split = str(split[6:10]+"-"+split[3:5]+"-"+split[0:2])
+               
+                if str(split) != str(old_animal[j+2]):
+                    temp.append(j)
+                    
+            id_data_changed.append(temp)
+    return id_data_changed
+
+def dara_row_verif_animal(row):   
     tab_validation = []
     if re.match(r"^[A-Z0-9]{9,20}$",str(row[0])) is None :  tab_validation.append(0)
     if re.match(r"^[A-Z]+[ \-']?[[A-Z]+[ \-']?]*[A-Z]+$",str(row[1])) is None :  tab_validation.append(1)
@@ -106,8 +138,30 @@ def dara_row_verif(row):
     if re.match(r"^[A-Z0-9]{9,20}$",str(row[5]))is None :  tab_validation.append(5)
     if re.match(r"^[A-Z]{2}$",str(row[6]))is None :  tab_validation.append(6)
     if re.match(r"^(False|True)$",str(row[7]))is None :  tab_validation.append(7)
+    if len(CheptelManager.get_cheptel_by_beta({"numero":row[8]})) == 0 : tab_validation.append(8)
+    if len(RaceManager.get_race_by_beta({"numero":row[9]})) == 0 : tab_validation.append(9)
     return tab_validation
 
+def dara_row_verif_prele(row):
+    tab_validation = []
+    print(row)
+    if re.match(r"^[A-Z0-9]{9,23}$",str(row[0]).upper()) is None :  tab_validation.append(0)
+    if re.match(r"^[0-9]{0,3}$",str(row[1]).upper()) is None :  tab_validation.append(1)
+    if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[2]).upper()) is None :  tab_validation.append(2)
+    if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[3]).upper()) is None :  tab_validation.append(3)
+    if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[4]).upper())is None :  tab_validation.append(4)
+    if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[5]).upper())is None :  tab_validation.append(5)
+    if re.match(r"^[A-Z0-9]{0,20}$",str(row[6]).upper())is None :  tab_validation.append(6)
+    if re.match(r"^[0-9]{1,3}\.?[0-9]{1,2}$",str(row[7]).upper())is None :  tab_validation.append(7)
+    if re.match(r"^(False|True)$",str(row[8]))is None :  tab_validation.append(8)
+    if re.match(r"^[A-Z0-9]{0,10}$",str(row[9]).upper())is None :  tab_validation.append(9)
+    if re.match(r"^[0-9]*$",str(row[10]).upper())is None :  tab_validation.append(10)
+    if re.match(r"^[A-Z0-9]*$",str(row[11]).upper())is None :  tab_validation.append(11)
+    if re.match(r"^[0-9]{2}$",str(row[12]).upper())is None :  tab_validation.append(12)
+    if len(AnimalManager.get_animal_by_beta({"numero":row[13]})) == 0 : tab_validation.append(13)
+    if len(PreleveurManager.get_preleveur_by_beta({"numero":row[14]})) == 0 : tab_validation.append(14)
+    return tab_validation
+    
 #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
     
 def to_html(data):

@@ -16,6 +16,9 @@ from django.conf import settings
 
 @csrf_exempt
 def admin_view(request):
+    
+    """ Insertion de l'objet correspondant """
+    
     if request.method == 'POST':
         
         id = request.POST.get('input')
@@ -29,7 +32,6 @@ def admin_view(request):
         else:
             PreleveurManager.register(Preleveur.create(id, attribut.upper()))
             
-        
         write_to_log(table,id,attribut)
     return render(request,'form/admin.html',{})
 

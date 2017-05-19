@@ -44,3 +44,13 @@ class PreleveurManager(object):
         for row in data:
             preleveur.append(row_to_preleveur(row))
         return preleveur
+    
+    @staticmethod
+    def get_preleveur_by_gamma(tosql):
+        if not tosql : return ""
+        requete = "(SELECT numero from form_preleveur WHERE "
+        for cle, valeur in tosql.items():
+            requete += str(cle + "='" + str(valeur) + "' AND ")
+        requete = requete[0:-5]
+        requete += ")"
+        return requete

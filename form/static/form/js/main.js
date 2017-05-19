@@ -11,6 +11,17 @@ function getData(indice,inputs){
 	});
 };
 
+function getGenotypage(indice,inputs){
+	$.ajax({
+		type: "GET",
+		url: "/ajax/genoty/",
+		data: {'indice': indice,'inputs':inputs},
+		success: function(data) {
+			affiche_tab(data,"#data");
+		}
+	});
+};
+
 function insertAnimal(data){
 	$.ajax({
 		type: "POST",
@@ -65,13 +76,45 @@ function findData(table,input_id,insert){
 
 show = [true,true,true,true,true];
 
+var genotypage = ["Plaque","Position","Format de puce","Date de Debut","Date de Scan","CallRate","Link to File","Note"];
+var prelevement = ["Date Insertion","Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
+var preleveur = ["Numero Agrement","Nom"];
+var animal = ["Ordre","Date Insert/Up","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
+var race = ["Numero Race","Nom Race"];
+var cheptel = ["Cheptel Actuel","Detenteur Actuel"];
+
+function affiche_entete(nom_entete){
+	var text = "";
+	if(nom_entete == "prelevement" ){
+		for (var i = 0; i < prelevement.length; i++) {
+			text += "<td class=\"prelevement\">" + prelevement[i] + "</td>";
+		}
+	}else if( nom_entete == "genotypage" ){
+		for (var i = 0; i < genotypage.length; i++) {
+			text += "<td class=\"genotypage\">" + genotypage[i] + "</td>";
+		}
+	}else if( nom_entete == "animal" ){
+		for (var i = 0; i < animal.length; i++) {
+			text += "<td class=\"animal\">" + animal[i] + "</td>";
+		}
+	}else if( nom_entete == "cheptel" ){
+		for (var i = 0; i < cheptel.length; i++) {
+			text += "<td class=\"cheptel\">" + cheptel[i] + "</td>";
+		}
+	}else if( nom_entete == "race" ){
+		for (var i = 0; i < race.length; i++) {
+			text += "<td class=\"race\">" + race[i] + "</td>";
+		}
+	}
+	return text;
+}
+
 function swap(integer){
 	if(show[integer]){
 		show[integer]=false;
 	}else{
 		show[integer]=true;
 	}
-	console.log(show);
 	show_hide("prelevement",show[0]);
 	show_hide("preleveur",show[1]);
 	show_hide("animal",show[2]);
@@ -88,12 +131,6 @@ function genere_input(int,id){
 }
 
 function genere_champs_affichage(){
-	
-	var prelevement = ["Date Insertion","Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
-	var preleveur = ["Numero Agrement","Nom"];
-	var animal = ["Ordre","Date Insert/Up","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
-	var race = ["Numero Race","Nom Race"];
-	var cheptel = ["Cheptel Actuel","Detenteur Actuel"];
 	
 	var text = "";
 	for (var i = 0; i < prelevement.length; i++) {
@@ -124,6 +161,18 @@ function show_hide(maclass,bool) {
 	}
 }
 
+function affiche_tab(data,div){
+	$("<table class=\"data\" >").appendTo(div);
+	text = ""
+	for (var i = 0; i < data.length; i++) {
+		text+="<tr>";
+		for (var j = 0; j < data[i].length; j++) {
+			text+="<td>"+data[i][j]+"</td>";
+		}
+		text+="</tr>";
+	}
+	$(text).appendTo(div+" table");
+}
 
 //--------------------------------------------------------------------------------------------------------//
 
@@ -148,6 +197,9 @@ function show_hide_class(maclass) {
 }
 
 function data_to_html(data){
+	if( typeof(data) == "text"){
+		return data;
+	}
 	text = "<table class=\"data\">";
 	text+="<tr>";
 	for(var h = 0; h < data[0].length;h++){

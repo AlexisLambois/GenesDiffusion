@@ -23,7 +23,14 @@ class DatabaseManager(object):
 	def close_connexion():
 		DatabaseManager.cursor.close()
 		DatabaseManager.pg_conn.close()
-
+	
+	@staticmethod	
+	def execute(requete):
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
 	#----------------------------------------------------------PRELEVEURS----------------------------------------------------------#
 
 	@staticmethod
@@ -191,7 +198,6 @@ class DatabaseManager(object):
 				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
 		requete = requete[0:-4]
 		requete += ";"
-		print(requete)
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
@@ -281,16 +287,16 @@ class DatabaseManager(object):
 	@staticmethod
 	def select_all_genotypages():
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("SELECT * FROM form_genotypages;")
+		DatabaseManager.cursor.execute("SELECT * FROM form_genotypage;")
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
 	
 	@staticmethod
-	def select_genotypages_by_alpha(tosql):
+	def select_genotypage_by_alpha(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_genotypages WHERE "
+		requete = "SELECT * FROM form_genotypage WHERE "
 		for cle, valeur in tosql.items():
 			if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
 				valeur = valeur[0] + valeur[1:len(valeur)].lower()
@@ -305,10 +311,10 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_genotypages_by_beta(tosql):
+	def select_genotypage_by_beta(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_genotypages WHERE "
+		requete = "SELECT * FROM form_genotypage WHERE "
 		for cle, valeur in tosql.items():
 			requete += str(cle + "='" + str(valeur) + "' AND ")
 		requete = requete[0:-4]
@@ -319,12 +325,45 @@ class DatabaseManager(object):
 		return data
 
 	@staticmethod
-	def register_genotypage(plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note):
+	def register_genotypage(plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note,prelevement):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note) \
-		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(format_puce)+"', '"+str(date_debut)+"', '"+str(date_scan)+"', '"+str(callrate)+"', '"+str(link_to_file)+"', '"+str(note)+"') \
+		DatabaseManager.cursor.execute("INSERT INTO form_genotypage (plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note,prelevement_id) \
+		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(format_puce)+"', '"+str(date_debut)+"', '"+str(date_scan)+"', '"+str(callrate)+"', '"+str(link_to_file)+"', '"+str(note)+"', '"+str(prelevement.get_id())+"') \
 		ON CONFLICT(plaque,position) DO UPDATE \
-		SET plaque='"+str(plaque)+"', position='"+str(position)+"', format_puce='"+str(format_puce)+"', date_debut='"+str(date_debut)+"', date_scan='"+str(date_scan)+"', callrate='"+str(callrate)+"', link_to_file='"+str(link_to_file)+"', note='"+str(note)+"';")
+		SET plaque='"+str(plaque)+"', position='"+str(position)+"', format_puce='"+str(format_puce)+"', date_debut='"+str(date_debut)+"', date_scan='"+str(date_scan)+"', callrate='"+str(callrate)+"', link_to_file='"+str(link_to_file)+"', note='"+str(note)+"', prelevement_id='"+str(prelevement.get_id())+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
+	
+	@staticmethod
+	def fusion():
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("select form_genotypage.plaque,form_genotypage.position,format_puce,date_debut,date_scan,callrate,link_to_file,note,form_prelevement.plaque,form_prelevement.position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal_id,preleveur_id from form_genotypage RIGHT JOIN form_prelevement ON form_prelevement.auto_increment_id = form_genotypage.prelevement_id ORDER BY form_prelevement.auto_increment_id ASC;")
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
 
+	@staticmethod
+	def get_fusion_by(tosql_genotype,tosql_prelevement):
+		DatabaseManager.open_connexion()
+		requete = "select form_genotypage.plaque,form_genotypage.position,format_puce,date_debut,date_scan,callrate,link_to_file,note,e1.plaque,e1.position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal_id,preleveur_id from form_genotypage RIGHT JOIN "
+		if not tosql_prelevement : 
+			requete += " form_prelevement AS e1 "
+		else:
+			requete += " (SELECT * FROM form_prelevement WHERE "
+			for cle, valeur in tosql_prelevement.items():
+				if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^(0?\d|[12]\d|3[01])-(0?\d|1[012])-((?:19|20)\d{2})$",str(valeur))is not None)):
+					valeur = valeur[0] + valeur[1:len(valeur)].lower()
+					requete += str(cle + "='" + str(valeur) + "' AND ")
+				else:
+					requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+			requete = requete[0:-4]
+			requete += ") AS e1 "
+		requete += "ON e1.auto_increment_id = form_genotypage.prelevement_id "
+		for cle, valeur in tosql_genotype.items():
+				requete += str("AND " + cle + "='" + str(valeur) + "'")
+		requete += "ORDER BY e1.auto_increment_id ASC;"
+		print(requete)
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data

@@ -5,6 +5,8 @@ from form.manager.animalmanager import AnimalManager
 from form.models.animal import Animal
 from form.models.prelevement import Prelevement
 from form.manager.prelevementmanager import PrelevementManager
+from form.manager.genotypagemanager import GenotypageManager
+from form.models.genotypage import Genotypage
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.http import HttpResponse
@@ -13,6 +15,7 @@ from django.http import HttpResponse
 def go_insert(request):
     addons_animal = []
     addons_prelevement = []
+    addons_genotypage = []
     total = []
     i = 1
     
@@ -43,7 +46,7 @@ def go_insert(request):
             AnimalManager.register(animal_temp)
             addons_animal.append(total[j][0])
             
-    else :
+    elif table.lower() == "prelevement" :
         
         #Traitements des donnees
         for j in range(0,len(total)-2):
@@ -57,7 +60,21 @@ def go_insert(request):
             prelev_temp = Prelevement.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][9],total[j][10],total[j][11],total[j][12],time.strftime('%d-%m-%y',time.localtime()),total[j][13],total[j][14])
             PrelevementManager.register(prelev_temp)
             addons_prelevement.append(total[j][0])
-               
+    else :
+        
+        #Traitements des donnees
+        for j in range(0,len(total)-2):
+            
+            #Reperage champs vide
+            for colonne in range(0,len(total[j])):
+                if(total[j][colonne] == ""):
+                    total[j][colonne] = 0
+            
+            #Creation et insertion prelevement
+            genoty_temp = Genotypage.create(total[j][0],total[j][1],total[j][2],total[j][3],total[j][4],total[j][5],total[j][6],total[j][7],total[j][8],total[j][9])
+            GenotypageManager.register(genoty_temp)
+            addons_genotypage.append(total[j][0])
+            
     #Ecriture en log des ajouts fait
     data = (str(write_to_log(addons_animal,addons_prelevement,total[len(total)-2][0])))
     return HttpResponse(data)       

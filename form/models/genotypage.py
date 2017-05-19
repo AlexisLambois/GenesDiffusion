@@ -4,23 +4,26 @@ Created on 12 mai 2017
 @author: alexis
 '''
 from django.db import models
+from form.models.prelevement import Prelevement
+from form.manager.prelevementmanager import PrelevementManager
 
 class Genotypage(models.Model):
     auto_increment_id = models.AutoField(primary_key=True)
     plaque = models.CharField(max_length=25)
     position = models.CharField(max_length=3)
-    format_puce = models.CharField(max_length=20)
+    format_puce = models.CharField(max_length=20,null=True)
     date_debut = models.DateField(null=True)
     date_scan = models.DateField(null=True)
     callrate = models.FloatField(null=True)
     link_to_file = models.CharField(max_length=4096,null=True)
     note = models.TextField(null=True)
+    prelevement = models.ForeignKey(Prelevement, on_delete=models.CASCADE)
     
     class Meta:
         unique_together = ('plaque','position')
         
     @classmethod
-    def create(cls,plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note):
+    def create(cls,plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note,prelevement_plaque,prelevement_position):
         genotypage = cls(plaque = plaque,
             position = position,
             format_puce = format_puce,
@@ -28,7 +31,8 @@ class Genotypage(models.Model):
             date_scan = date_scan,
             callrate = callrate,
             link_to_file = link_to_file,
-            note = note
+            note = note,
+            prelevement = PrelevementManager.get_prelevement_by_beta({"plaque":prelevement_plaque,"position":prelevement_position})[0]
             )
         return genotypage
     
@@ -61,6 +65,9 @@ class Genotypage(models.Model):
     def get_note(self):
         return self.note
     
+    def get_prelevement(self):
+        return self.prelevement
+    
     #---------------------------------------------------------------------------------------------------------------------------#
 
     def set_plaque(self,plaque):
@@ -86,11 +93,14 @@ class Genotypage(models.Model):
         
     def set_note(self,note):
         self.note = note
+    
+    def set_prelevement(self,prelevement):
+        self.prelevement = prelevement
         
     #----------------------------------------------------------Formatage affichage----------------------------------------------------------#
     
     def to_array(self):
-        return[str(self.get_plaque()),str(self.get_position()),str(self.get_format_puce()),str(self.get_date_debut()),str(self.get_date_scan()),str(self.get_callrate()),str(self.get_link_to_file()),str(self.get_note())]
+        return[str(self.get_plaque()),str(self.get_position()),str(self.get_format_puce()),str(self.get_date_debut()),str(self.get_date_scan()),str(self.get_callrate()),str(self.get_link_to_file()),str(self.get_note()),str(self.get_prelevement().get_plaque()),str(self.get_prelevement().get_position())]
         
     def to_array_html(self):
         return[str(self.get_plaque()),str(self.get_position()),str(self.get_format_puce()),str(self.get_date_debut()),str(self.get_date_scan()),str(self.get_callrate()),str(self.get_link_to_file()),str(self.get_note())]

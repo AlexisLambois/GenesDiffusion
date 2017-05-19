@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	{% load static %}
+	<title>Page Genotypage</title>
+    <link href="{% static "form/css/style2.css" %}" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
+</head>
+<body>
+	
+	<div class="container">
+	
+			<table class="tab_entete data">
+				<tr>
+					<script type="text/javascript">
+						document.write(affiche_entete("genotypage"));
+						document.write(affiche_entete("prelevement"));
+					</script>
+					<td>Id Animal</td>
+					<td>Id Preleveur</td>
+				</tr>
+				<tr>
+					<script type="text/javascript">
+						document.write(genere_input(10, "genotypage"));
+						document.write(genere_input(14, "prelevement"));
+					</script>
+				</tr>
+			</table>
+			
+			<div id="data">
+				<script type="text/javascript">
+					getGenotypage([],[]);
+				</script>
+			</div>		
+	</div>
+
+	<script type="text/javascript">
+		
+		document.onkeydown = function(e) {
+			if(e) {
+				if(e.keyCode===13) { 
+				    var inputs = [];
+				    for (var i = 0 ; i < $('input').length ; i++) {
+				    	if( $('input')[i].type.toLowerCase() == 'text'){
+				    		inputs.push($('input')[i].value.toUpperCase());
+				    	}
+				    }
+				    var indice = indice_change(inputs);
+				    document.getElementById('data').innerHTML = "";
+				    getGenotypage(indice,inputs);
+				}
+			}
+		};
+		
+	</script>
+
+</body>
+</html>

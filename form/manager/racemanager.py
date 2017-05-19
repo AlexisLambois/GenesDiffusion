@@ -44,3 +44,13 @@ class RaceManager(object):
         for row in data:
             races.append(row_to_race(row))
         return races
+    
+    @staticmethod
+    def get_race_by_gamma(tosql):
+        if not tosql : return ""
+        requete = "(SELECT numero from form_race WHERE "
+        for cle, valeur in tosql.items():
+            requete += str(cle + "='" + str(valeur) + "' AND ")
+        requete = requete[0:-4]
+        requete += ")"
+        return requete

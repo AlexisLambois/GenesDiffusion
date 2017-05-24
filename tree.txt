@@ -55,17 +55,17 @@
 │   │   └── form
 │   │       ├── admin.html
 │   │       ├── genotypage.html
+│   │       ├── index.html
 │   │       ├── insert.html
-│   │       ├── print.html
-│   │       └── truc.html
+│   │       └── print.html
 │   ├── urls.py
 │   └── views
 │       ├── admin_view.py
 │       ├── genotypage_view.py
+│       ├── index_view.py
 │       ├── __init__.py
 │       ├── insert_view.py
-│       ├── print_view.py
-│       └── truc_view.py
+│       └── print_view.py
 ├── manage.py
 ├── media
 ├── Project

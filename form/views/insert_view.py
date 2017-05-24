@@ -11,7 +11,7 @@ from django.utils.html import format_html
 from django.views.decorators.csrf import csrf_exempt
 from pyexcel_ods import get_data
 from openpyxl import load_workbook
-from ..manager.animalmanager import AnimalManager
+from form.manager.animalmanager import AnimalManager
 from form.manager.cheptelmanager import CheptelManager
 from form.manager.racemanager import RaceManager
 from form.manager.preleveurmanager import PreleveurManager
@@ -36,7 +36,7 @@ def insert_view(request):
             data = data_gather( settings.BASE_DIR + uploaded_file_url)
             data.append([myfile.name])
             data.append([table])
-          
+            
             if table.lower() == "animal" and len(data[0]) == 10 :
                 data_changed = find_data_changed_animal(data)
                 for row_number in range(1,len(data)-2):
@@ -50,7 +50,7 @@ def insert_view(request):
                 for row_number in range(1,len(data)-2):
                     error_data.append(dara_row_verif_genoty(data[row_number]))
             else:
-                data = "<p>Fichier incompatible avec le parametre" + str(table) + "</p>"
+                data = "<h3>Fichier incompatible avec le parametre " + str(table) + "</h3>"
                 error_data = []
                 data_changed = []  
         return render(request, 'form/insert.html', {

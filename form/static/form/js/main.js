@@ -1,21 +1,19 @@
-function getData(indice,inputs){
+function getData(indice,inputs,operateurs){
 	$.ajax({
-		type: "GET",
-//		url: "/ajax/more/",
+		type: "POST",
 		url: "/ajax/printer/",
-//		data: {'indice': indice,'inputs':inputs,'ordre':document.getElementById('myonoffswitch').checked},
-		data: {'indice': indice,'inputs':inputs},
+		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
 		success: function(data) {
 			affiche_tab(data,"#data");
 		}
 	});
 };
 
-function getGenotypage(indice,inputs){
+function getGenotypage(indice,inputs,operateurs){
 	$.ajax({
 		type: "GET",
 		url: "/ajax/genoty/",
-		data: {'indice': indice,'inputs':inputs},
+		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
 		success: function(data) {
 			affiche_tab(data,"#data");
 		}
@@ -35,11 +33,22 @@ function insertAnimal(data){
 	});
 };
 
-function saveData(indice,inputs){
+function saveData(indice,inputs,operateurs){
 	$.ajax({
 		type: "POST",
 		url: "/ajax/save/",
-		data: {'indice': indice,'inputs':inputs},
+		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
+		success: function(data) {
+			
+		}
+	});
+};
+
+function saveData_Genoty(indice,inputs,operateurs){
+	$.ajax({
+		type: "POST",
+		url: "/ajax/save_geno/",
+		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
 		success: function(data) {
 			
 		}
@@ -122,10 +131,10 @@ function swap(integer){
 	show_hide("race",show[4]);
 }
 
-function genere_input(int,id){
+function genere_x_text(int,insert){
 	var text = "";
 	for(var i=0; i<int; i++){
-		text += ("<td class=\"" + id + "\"><input id=\""+i+"\" type=\"text\"/></td>");
+		text += insert;
 	}
 	return text;
 }
@@ -197,7 +206,7 @@ function show_hide_class(maclass) {
 }
 
 function data_to_html(data){
-	if( typeof(data) == "text"){
+	if( typeof(data) == "string"){
 		return data;
 	}
 	text = "<table class=\"data\">";

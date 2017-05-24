@@ -2,8 +2,8 @@
 <html>
 <head>
 	{% load static %}	
-	<title>Page 2</title>
-    <link href="{% static "form/css/style.css" %}" type="text/css" rel="stylesheet" />
+	<title>Page Insertion</title>
+    <link href="{% static "form/css/style2.css" %}" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -15,6 +15,7 @@
 	</div>
 
 	<div class="container">
+		<a href="/">Retour</a><br><br>
 		
 		<form  enctype="multipart/form-data" action="" method="post">
     		{% csrf_token %}

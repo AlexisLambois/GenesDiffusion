@@ -16,3 +16,42 @@
 .tab_entete input{
 	width:80%;
 }
+
+.container a{
+	border: 3px black solid;
+	text-decoration: none;
+	padding: 5px;
+	cursor: pointer;
+}
+
+.container a:visited {
+	color: #000;
+	text-decoration: none;
+}
+
+.container a:hover {
+	color: red;
+	text-decoration: none;
+}
+
+.container a:active {
+	color: green;
+	text-decoration: none;
+}
+
+.balise{
+	text-align: center;
+}
+
+#carre{ 
+	display: block;
+  	width: 30px;
+ 	height: 30px;
+  	cursor: pointer;	
+	float: left;
+	margin-left:5px;
+}
+
+.page-header h1 {
+	margin-left: 5%;
+}

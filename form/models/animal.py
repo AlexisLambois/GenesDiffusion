@@ -3,8 +3,8 @@
 from django.db import models
 from .cheptel import Cheptel
 from .race import Race
-from ..manager.cheptelmanager import CheptelManager
-from ..manager.racemanager import RaceManager
+from form.manager.cheptelmanager import CheptelManager
+from form.manager.racemanager import RaceManager
 
 class Animal(models.Model):
     numero = models.CharField(max_length=20,primary_key=True)

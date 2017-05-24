@@ -1,11 +1,14 @@
 import sys
-
 sys.path.append("/usr/local/lib/python2.7/dist-packages")
-
 import psycopg2,re
 
 class DatabaseManager(object):
-	"""Cette classe permet de serialiser un objet en base de donnees"""
+	
+	"""Cette classe permet de serialiser un objet en base de donnees
+		ALPHA : Requete sur une valeur connue partiellement (ou entiere)
+		BETA : Requete sur une valeur connue entierement
+		GAMMA : Requete comportant une posibilite de sous requete
+	"""
 
 	pg_conn = None
 	cursor = None
@@ -68,6 +71,16 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
+	
+	@staticmethod
+	def select_preleveur_by_gamma(tosql):
+		if not tosql : return ""
+		requete = "(SELECT numero from form_preleveur WHERE "
+		for cle, valeur in tosql.items():
+			requete += get_request_by_type(cle,valeur)
+		requete = requete[0:-5]
+		requete += ")"
+		return requete
 
 	@staticmethod
 	def register_preleveur(numero, nom=''):
@@ -118,6 +131,16 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
+	def select_race_by_gamma(tosql):
+		if not tosql : return ""
+		requete = "(SELECT numero from form_race WHERE "
+		for cle, valeur in tosql.items():
+			requete += get_request_by_type(cle,valeur)
+		requete = requete[0:-5]
+		requete += ")"
+		return requete
+	
+	@staticmethod
 	def register_race(numero, nom=''):
 		DatabaseManager.open_connexion()
 		DatabaseManager.cursor.execute("INSERT INTO form_race(numero, nom) \
@@ -164,6 +187,16 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
+	
+	@staticmethod
+	def select_cheptel_by_gamma(tosql):
+		if not tosql : return ""
+		requete = "(SELECT numero from form_cheptel WHERE "
+		for cle, valeur in tosql.items():
+			requete += get_request_by_type(cle,valeur)
+		requete = requete[0:-5]
+		requete += ")"
+		return requete
 
 	@staticmethod
 	def register_cheptel(numero, detenteur=''):
@@ -216,6 +249,27 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
+	
+	@staticmethod
+	def select_animal_by_gamma(tosql,sous_requete):
+		no_sous_requete = True
+		requete = "(SELECT numero from form_animal WHERE "
+		if tosql:
+			for cle, valeur in tosql.items():
+				requete += get_request_by_type(cle,valeur)
+		for cle, valeur in sous_requete.items():
+			if str(valeur) != "":
+				no_sous_requete = False
+				break
+		if not tosql and no_sous_requete : return ""
+		if not no_sous_requete :
+			for cle, valeur in sous_requete.items():
+				if str(valeur) != "":
+					requete += get_request_by_type(cle,valeur)
+		requete = requete[0:-5]
+		requete += ")"
+		print(requete)
+		return requete
 
 	@staticmethod
 	def register_animal(numero, nom, sexe, race, date_naissance, pere, mere, jumeau, pays, cheptel,ordre,date_insertion):
@@ -271,7 +325,27 @@ class DatabaseManager(object):
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
-
+	
+	@staticmethod
+	def select_prelevement_by_gamma(tosql,sous_requete):
+		no_sous_requete = True
+		requete = "(SELECT * from form_prelevement WHERE "
+		if tosql:
+			for cle, valeur in tosql.items():
+				requete += get_request_by_type(cle,valeur)
+		for cle, valeur in sous_requete.items():
+			if str(valeur) != "":
+				no_sous_requete = False
+				break
+		if not tosql and no_sous_requete : return ""
+		if not no_sous_requete :
+			for cle, valeur in sous_requete.items():
+				if str(valeur) != "":
+					requete += get_request_by_type(cle,valeur)
+		requete = requete[0:-5]
+		requete += ")"
+		return requete
+		
 	@staticmethod
 	def register_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal,preleveur):
 		DatabaseManager.open_connexion()
@@ -334,6 +408,8 @@ class DatabaseManager(object):
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
 	
+	#----------------------------------------------------------FUSION GENOTYPAGE PRELEVEMENT----------------------------------------------------------#
+	
 	@staticmethod
 	def fusion():
 		DatabaseManager.open_connexion()
@@ -351,19 +427,27 @@ class DatabaseManager(object):
 		else:
 			requete += " (SELECT * FROM form_prelevement WHERE "
 			for cle, valeur in tosql_prelevement.items():
-				if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^(0?\d|[12]\d|3[01])-(0?\d|1[012])-((?:19|20)\d{2})$",str(valeur))is not None)):
-					valeur = valeur[0] + valeur[1:len(valeur)].lower()
-					requete += str(cle + "='" + str(valeur) + "' AND ")
-				else:
-					requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+				requete += get_request_by_type(cle,valeur)
 			requete = requete[0:-4]
 			requete += ") AS e1 "
 		requete += "ON e1.auto_increment_id = form_genotypage.prelevement_id "
 		for cle, valeur in tosql_genotype.items():
-				requete += str("AND " + cle + "='" + str(valeur) + "'")
+			requete += "AND "
+			requete += get_request_by_type(cle,valeur)
+			requete = requete[0:-4]
 		requete += "ORDER BY e1.auto_increment_id ASC;"
-		print(requete)
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
+	
+def get_request_by_type(cle,valeur):
+	if valeur[0] == "=" or valeur[0] == "<" or valeur[0] == ">":
+		return str(cle + str(valeur) + " AND ")
+	elif (re.match(r"^(FALSE|TRUE)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None):
+		return str(cle + "='" + str(valeur) + "' AND ")
+	elif valeur[0] == "(":
+		return str(cle +" IN "+ str(valeur) + " AND ")
+	else:
+		return str(cle + " LIKE '" + str(valeur) + "%' AND ")
+	return ""

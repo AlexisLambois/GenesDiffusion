@@ -7,9 +7,9 @@ Recherche de Cheptel/Race/Preleveur sur la page admin
 '''
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from ..manager.racemanager import RaceManager
-from ..manager.cheptelmanager import CheptelManager
-from ..manager.preleveurmanager import PreleveurManager
+from form.manager.racemanager import RaceManager
+from form.manager.cheptelmanager import CheptelManager
+from form.manager.preleveurmanager import PreleveurManager
 
 @csrf_exempt
 def go_find(request):
@@ -20,10 +20,12 @@ def go_find(request):
     id = request.POST.get('input_id')
     
     """ Verification de saisie null """
+    
     if id == "":
         return HttpResponse("None")
     
     """ On considere la recherche echoue a l'initialisation """
+    
     data = "Null"
     
     """ On remplace les data si la recherche est un succes """

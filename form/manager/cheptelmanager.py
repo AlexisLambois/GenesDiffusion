@@ -47,10 +47,4 @@ class CheptelManager(object):
     
     @staticmethod
     def get_cheptel_by_gamma(tosql):
-        if not tosql : return ""
-        requete = "(SELECT numero from form_cheptel WHERE "
-        for cle, valeur in tosql.items():
-            requete += str(cle + "='" + str(valeur) + "' AND ")
-        requete = requete[0:-5]
-        requete += ")"
-        return requete
+        return DatabaseManager.select_cheptel_by_gamma(tosql)

@@ -11,24 +11,35 @@
 <body>
 	
 	<div class="container">
-	
-		<a href="#" onclick=swap(0)>Show Prelevement</a> 
-		<a href="#" onclick=swap(2)>Show Animal</a>
-		<a href="#" onclick=swap(3)>Show Cheptel</a>
-		<a href="#" onclick=swap(4)>Show Race</a>
-	 	<a href="#" onclick=swap(1)>Show Preleveur</a> 
-		<br>
-		<a href="#" id="save">Save</a>
-		
+		<div class="balise">
+			<br>
+			<a onclick=swap(0)>Show Prelevement</a> 
+			<a onclick=swap(2)>Show Animal</a>
+			<a onclick=swap(3)>Show Cheptel</a>
+			<a onclick=swap(4)>Show Race</a>
+		 	<a onclick=swap(1)>Show Preleveur</a> 
+			<br><br>
+			<a id="save">Save</a>
+			<a href="/">Retour</a>
+			<br><br>
+		</div>
 		<table class="tab_entete data">
 			<tr>
-				<script type="text/javascript">
-					document.write(genere_input(14, "prelevement"));
-					document.write(genere_input(10, "animal"));
-					document.write(genere_input(2, "race"));
-					document.write(genere_input(2, "cheptel"));
-					document.write(genere_input(2, "preleveur"));
-				</script>
+				<td class="prelevement"><input type="text"><SELECT name="0" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(2, "<td class=\"prelevement\"><input type=\"text\"></td>"));</script>
+				<td class="prelevement"><input type="text"><SELECT name="3" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td class="prelevement"><input type="text"><SELECT name="4" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td class="prelevement"><input type="text"><SELECT name="5" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td class="prelevement"><input type="text"><SELECT name="6" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(7, "<td class=\"prelevement\"><input type=\"text\"></td>"));</script>
+				<script type="text/javascript">document.write(genere_x_text(1, "<td class=\"animal\"><input type=\"text\"></td>"));</script>
+				<td class="animal"><input type="text"><SELECT name="15" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(3, "<td class=\"animal\"><input type=\"text\"></td>"));</script>
+				<td class="animal"><input type="text"><SELECT name="19" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(4, "<td class=\"animal\"><input type=\"text\"></td>"));</script>
+				<script type="text/javascript">document.write(genere_x_text(2, "<td class=\"cheptel\"><input type=\"text\"></td>"));</script>
+				<script type="text/javascript">document.write(genere_x_text(2, "<td class=\"race\"><input type=\"text\"></td>"));</script>
+				<script type="text/javascript">document.write(genere_x_text(2, "<td class=\"preleveur\"><input type=\"text\"></td>"));</script>
 			</tr>
 			<tr>
 				<script type="text/javascript">
@@ -56,9 +67,17 @@
 				    		inputs.push($('input')[i].value.toUpperCase());
 				    	}
 				    }
+				    var operateurs = [];
+				    //On evite le new Array qui bug ici
+				    for (var i = 0 ; i < 30 ; i++){
+				    	operateurs.push(""); 
+				    }
+				    for (var i = 0 ; i < $('SELECT').length ; i++) {
+				    	operateurs[$('SELECT')[i].name] = ($('SELECT')[i].value);
+				    }
 				    var indice = indice_change(inputs);
 				    document.getElementById('data').innerHTML = "";
-				    getData(indice,inputs);
+				    getData(indice,inputs,operateurs);
 				}
 			}
 		};
@@ -70,8 +89,16 @@
 		    		inputs.push($('input')[i].value.toUpperCase());
 		    	}
 		    }
+		    var operateurs = [];
+		    //On evite le new Array qui bug ici
+		    for (var i = 0 ; i < 30 ; i++){
+		    	operateurs.push(""); 
+		    }
+		    for (var i = 0 ; i < $('SELECT').length ; i++) {
+		    	operateurs[$('SELECT')[i].name] = ($('SELECT')[i].value);
+		    }
 		    var indice = indice_change(inputs);
-			saveData(indice,inputs);
+			saveData(indice,inputs,operateurs);
 		};
 	</script>
 

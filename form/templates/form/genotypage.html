@@ -12,28 +12,42 @@
 	
 	<div class="container">
 	
-			<table class="tab_entete data">
-				<tr>
-					<script type="text/javascript">
-						document.write(affiche_entete("genotypage"));
-						document.write(affiche_entete("prelevement"));
-					</script>
-					<td>Id Animal</td>
-					<td>Id Preleveur</td>
-				</tr>
-				<tr>
-					<script type="text/javascript">
-						document.write(genere_input(10, "genotypage"));
-						document.write(genere_input(14, "prelevement"));
-					</script>
-				</tr>
-			</table>
-			
-			<div id="data">
+		<div class="balise">
+			<br>
+			<a href="/">Retour</a>
+			<a href="#" id="save">Save</a>
+			<br><br>
+		</div>
+		
+		<table class="tab_entete data">
+			<tr>
 				<script type="text/javascript">
-					getGenotypage([],[]);
+					document.write(affiche_entete("genotypage"));
+					document.write(affiche_entete("prelevement"));
 				</script>
-			</div>		
+				<td>Id Animal</td>
+				<td>Id Preleveur</td>
+			</tr>
+			<tr>
+				<script type="text/javascript">document.write(genere_x_text(3, "<td><input type=\"text\"></td>"));</script>
+				<td><input type="text"><SELECT name="3" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td><input type="text"><SELECT name="4" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(3, "<td><input type=\"text\"></td>"));</script>
+				<td><input type="text"><SELECT name="8" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(2, "<td><input type=\"text\"></td>"));</script>
+				<td><input type="text"><SELECT name="11" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td><input type="text"><SELECT name="12" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td><input type="text"><SELECT name="13" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<td><input type="text"><SELECT name="14" size="1"><OPTION>=<OPTION>&lt;=<OPTION>&gt;=</SELECT></td>
+				<script type="text/javascript">document.write(genere_x_text(9, "<td><input type=\"text\"></td>"));</script>
+			</tr>
+		</table>
+			
+		<div id="data">
+			<script type="text/javascript">
+				getGenotypage([],[]);
+			</script>
+		</div>		
 	</div>
 
 	<script type="text/javascript">
@@ -47,11 +61,38 @@
 				    		inputs.push($('input')[i].value.toUpperCase());
 				    	}
 				    }
+				    var operateurs = [];
+				    //On evite le new Array qui bug ici
+				    for (var i = 0 ; i < 30 ; i++){
+				    	operateurs.push(""); 
+				    }
+				    for (var i = 0 ; i < $('SELECT').length ; i++) {
+				    	operateurs[$('SELECT')[i].name] = ($('SELECT')[i].value);
+				    }
 				    var indice = indice_change(inputs);
 				    document.getElementById('data').innerHTML = "";
-				    getGenotypage(indice,inputs);
+				    getGenotypage(indice,inputs,operateurs);
 				}
 			}
+		};
+		
+		document.getElementById('save').onclick = function(){
+			var inputs = [];
+		    for (var i = 0 ; i < $('input').length ; i++) {
+		    	if( $('input')[i].type.toLowerCase() == 'text'){
+		    		inputs.push($('input')[i].value.toUpperCase());
+		    	}
+		    }
+		    var operateurs = [];
+		    //On evite le new Array qui bug ici
+		    for (var i = 0 ; i < 30 ; i++){
+		    	operateurs.push(""); 
+		    }
+		    for (var i = 0 ; i < $('SELECT').length ; i++) {
+		    	operateurs[$('SELECT')[i].name] = ($('SELECT')[i].value);
+		    }
+		    var indice = indice_change(inputs);
+			saveData_Genoty(indice,inputs,operateurs);
 		};
 		
 	</script>

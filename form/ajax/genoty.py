@@ -7,8 +7,9 @@ Affichage des data sur la page de recherche/consultation
 '''
 from django.http import HttpResponse
 from form.manager.genotypage_prelevementmanager import Genotypage_PrelevementManager
-import json
-
+import json,os,time,csv
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 """ Tableau des noms sql des colonnes dans l'ordre de saisie """
 
@@ -22,9 +23,10 @@ def go_genoty(request):
     for i in request.GET.getlist('indice[]'):
         indice.append(int(i))
     inputs = request.GET.getlist('inputs[]')
+    operateurs = request.GET.getlist('operateurs[]')
     
     data = []
-    
+  
     """ Affichage initial sans recherche """
     
     if len(indice) == 0:
@@ -38,10 +40,17 @@ def go_genoty(request):
         tosql_prelevement = {}
         
         for id in indice:
+            
             if id < 8 :
-                tosql_genotype.update({tab_entete[id]:inputs[id].lower()})
+                if operateurs[id] == "":
+                    tosql_genotype.update({tab_entete[id]:inputs[id]})
+                else:
+                    tosql_genotype.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
             else:
-                tosql_prelevement.update({tab_entete[id]:inputs[id].lower()})
+                if operateurs[id] == "":
+                    tosql_prelevement.update({tab_entete[id]:inputs[id]})
+                else:
+                    tosql_prelevement.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
         
         data_temp = Genotypage_PrelevementManager.get_fusion_by(tosql_genotype,tosql_prelevement)
         
@@ -50,4 +59,64 @@ def go_genoty(request):
             
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')
+
+@csrf_exempt
+def go_save(request):
+    
+    """ Idem que go_genoty, on recupere les infos selectionnees """
+    
+    indice = []
+    for i in request.POST.getlist('indice[]'):
+        indice.append(int(i))
+    inputs = request.POST.getlist('inputs[]')
+    operateurs = request.GET.getlist('operateurs[]')
+    
+    data = []
+    
+    if len(indice) == 0:
+        temp = Genotypage_PrelevementManager.get_fusion()
+
+        for row in temp:
+            data.append(row.to_array())
+            
+    else:
+        tosql_genotype = {}
+        tosql_prelevement = {}
+        
+        for id in indice:
+            
+            if id < 8 :
+                if operateurs[id] == "":
+                    tosql_genotype.update({tab_entete[id]:inputs[id]})
+                else:
+                    tosql_genotype.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
+            else:
+                if operateurs[id] == "":
+                    tosql_prelevement.update({tab_entete[id]:inputs[id]})
+                else:
+                    tosql_prelevement.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
+        
+        data_temp = Genotypage_PrelevementManager.get_fusion_by(tosql_genotype,tosql_prelevement)
+        
+        for row in data_temp:
+            data.append(row.to_array())
+                
+    """ Ecrture dans un csv des lignes selectionnees """
+    
+    write_to_file(data)
+    return HttpResponse(data)  
+
+def write_to_file(data):
+    
+    if not os.path.exists(settings.BASE_DIR+"/media/save/"):
+        os.mkdir(settings.BASE_DIR+"/media/save/")    
+    
+    w_file=open(str(settings.BASE_DIR+"/media/save/save"+time.strftime('%d_%m_%y_%H_%M',time.localtime())+".csv"), 'w')
+        
+    c = csv.writer(w_file, delimiter='\t', lineterminator='\n')
+    
+    c.writerow(tab_entete)    
+    for genoty in data: 
+        c.writerow(genoty)
+    w_file.close()    
 

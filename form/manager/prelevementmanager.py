@@ -46,23 +46,7 @@ class PrelevementManager(object):
 
     @staticmethod
     def get_prelevement_by_gamma(tosql,sous_requete):
-        no_sous_requete = True
-        requete = "(SELECT * from form_prelevement WHERE "
-        if tosql:
-            for cle, valeur in tosql.items():
-                requete += str(cle + "='" + str(valeur) + "' AND ")
-        for cle, valeur in sous_requete.items():
-            if str(valeur) != "":
-                no_sous_requete = False
-                break
-        if not tosql and no_sous_requete : return ""
-        if not no_sous_requete :
-            for cle, valeur in sous_requete.items():
-                if str(valeur) != "":
-                    requete += str(cle + "=" + str(valeur) + " AND ")
-        requete = requete[0:-5]
-        requete += ")"
-        return requete
+        return DatabaseManager.select_prelevement_by_gamma(tosql,sous_requete)
     
     @staticmethod
     def to_object(data):

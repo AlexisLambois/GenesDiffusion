@@ -100,8 +100,8 @@ def find_data_changed_prelev(data):
     id_data_changed = []
     for i in range(1,len(data)-2):
   
-        if len(PrelevementManager.get_prelevement_by_beta({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
-            old_prelevement = (PrelevementManager.get_prelevement_by_beta({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
+        if len(PrelevementManager.get_prelevement_by_alpha({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
+            old_prelevement = (PrelevementManager.get_prelevement_by_alpha({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
             temp = []
             
             for j in range(0,len(data[i])):
@@ -109,7 +109,7 @@ def find_data_changed_prelev(data):
                 if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(data[i][j])) is not None:
                     split = str(split[6:10]+"-"+split[3:5]+"-"+split[0:2])
                 
-                if str(split) != str(old_prelevement[j]):
+                if str(split).upper() != str(old_prelevement[j]):
                     temp.append(j)
                     
             id_data_changed.append(temp)
@@ -148,7 +148,7 @@ def find_data_changed_genoty(data):
                 if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(data[i][j])) is not None:
                     split = str(split[6:10]+"-"+split[3:5]+"-"+split[0:2])
                 
-                if str(split) != str(old_genotypage[j]):
+                if str(split).upper() != str(old_genotypage[j]):
                     temp.append(j)
                     
             id_data_changed.append(temp)
@@ -158,11 +158,11 @@ def find_data_changed_genoty(data):
 def dara_row_verif_animal(row):   
     tab_validation = []
     if re.match(r"^[A-Z0-9]{9,20}$",str(row[0])) is None :  tab_validation.append(0)
-    if re.match(r"^[A-Z]+[ \-']?[[A-Z]+[ \-']?]*[A-Z]+$",str(row[1])) is None :  tab_validation.append(1)
+    if re.match(r"^[A-Z0-9]+([ ]*[-]*[A-Z0-9]*)*$",str(row[1])) is None :  tab_validation.append(1)
     if re.match(r"^[0-9]{1}$",str(row[2])) is None :  tab_validation.append(2)
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[3])) is None :  tab_validation.append(3)
-    if re.match(r"^[A-Z0-9]{9,20}$",str(row[4]))is None :  tab_validation.append(4)
-    if re.match(r"^[A-Z0-9]{9,20}$",str(row[5]))is None :  tab_validation.append(5)
+    if re.match(r"^[A-Z0-9]{5,20}$",str(row[4]))is None :  tab_validation.append(4)
+    if re.match(r"^[A-Z0-9]{5,20}$",str(row[5]))is None :  tab_validation.append(5)
     if re.match(r"^[A-Z]{2}$",str(row[6]))is None :  tab_validation.append(6)
     if re.match(r"^(False|True)$",str(row[7]))is None :  tab_validation.append(7)
     if len(CheptelManager.get_cheptel_by_beta({"numero":row[8]})) == 0 : tab_validation.append(8)
@@ -171,8 +171,8 @@ def dara_row_verif_animal(row):
 
 def dara_row_verif_prele(row):
     tab_validation = []
-    if re.match(r"^[A-Z0-9]{9,23}$",str(row[0]).upper()) is None :  tab_validation.append(0)
-    if re.match(r"^[0-9]{0,3}$",str(row[1]).upper()) is None :  tab_validation.append(1)
+    if re.match(r"^[A-Z0-9]{7,23}[-]*[A-Z0-9]*$",str(row[0]).upper()) is None :  tab_validation.append(0)
+    if re.match(r"^[A-Z0-9]{0,3}$",str(row[1]).upper()) is None :  tab_validation.append(1)
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[2]).upper()) is None :  tab_validation.append(2)
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[3]).upper()) is None :  tab_validation.append(3)
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[4]).upper())is None :  tab_validation.append(4)
@@ -201,17 +201,3 @@ def dara_row_verif_genoty(row):
         tab_validation.append(9)
     return tab_validation
     
-#----------------------------------------------------------Formatage affichage----------------------------------------------------------#
-    
-def to_html(data):
-    if len(data) == 0:
-        return format_html("<h1>Mauvaise Version de Fichier</h1>")
-    else:
-        text = "<table>"
-        for animal in range(0,len(data)):
-            text += "<tr id=" + str(animal) + ">"
-            for data_animal in range(0,len(data[animal])):
-                text += "<td class="+ str(data_animal) +">" + str(data[animal][data_animal]) + "</td>"
-            text += "</tr>"
-        text += "</table>"
-        return format_html(text)

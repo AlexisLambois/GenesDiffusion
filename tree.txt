@@ -42,12 +42,15 @@
 │   │       ├── data_animal
 │   │       │   ├── data_4.ods
 │   │       │   ├── data_5.ods
+│   │       │   ├── data_8.ods
 │   │       │   ├── exemple5_2.xlsx
 │   │       │   └── exemple6_15.xls
 │   │       ├── data_genotypage
 │   │       │   └── data_genotypage.ods
 │   │       ├── data_prelevement
 │   │       │   ├── data_prelevement_2.ods
+│   │       │   ├── data_prelevement_3.ods
+│   │       │   ├── data_prelevement_4.ods
 │   │       │   └── data_prelevement.ods
 │   │       └── js
 │   │           └── main.js
@@ -66,6 +69,8 @@
 │       ├── __init__.py
 │       ├── insert_view.py
 │       └── print_view.py
+├── man
+│   └── manuel.odt
 ├── manage.py
 ├── media
 ├── Project
@@ -78,4 +83,4 @@
 ├── script.sql
 └── tree.txt
 
-17 directories, 61 files
+18 directories, 65 files

@@ -301,7 +301,7 @@ class DatabaseManager(object):
 		requete = "SELECT * FROM form_prelevement WHERE "
 		for cle, valeur in tosql.items():
 			if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
-				valeur = valeur[0] + valeur[1:len(valeur)].lower()
+				valeur = str(valeur)[0] + str(valeur)[1:len(str(valeur))].lower()
 				requete += str(cle + "='" + str(valeur) + "' AND ")
 			else:
 				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
@@ -329,7 +329,7 @@ class DatabaseManager(object):
 	@staticmethod
 	def select_prelevement_by_gamma(tosql,sous_requete):
 		no_sous_requete = True
-		requete = "(SELECT * from form_prelevement WHERE "
+		requete = "(SELECT auto_increment_id from form_prelevement WHERE "
 		if tosql:
 			for cle, valeur in tosql.items():
 				requete += get_request_by_type(cle,valeur)
@@ -345,14 +345,30 @@ class DatabaseManager(object):
 		requete = requete[0:-5]
 		requete += ")"
 		return requete
+	
+	@staticmethod
+	def select_prelevement_to_html(tab_id):
+		DatabaseManager.open_connexion()
+		if len(tab_id) == 0: 
+			requete = "SELECT to_html from form_prelevement;"
+		else:
+			requete = "SELECT to_html from form_prelevement WHERE "
+			for id in tab_id:
+				requete += "auto_increment_id=" + str(id[0]) + " OR "
+			requete = requete[0:-4]
+			requete += ";"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
 		
 	@staticmethod
-	def register_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal,preleveur):
+	def register_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal,preleveur,html):
 		DatabaseManager.open_connexion()
-		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal_id,preleveur_id) \
-		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(date_enregistrement)+"', '"+str(date_demande)+"', '"+str(date_extraction)+"', '"+str(date_reception_lille)+"', '"+str(type_materiel)+"', '"+str(dosage)+"', '"+str(conformite_dosage)+"', '"+str(code_barre)+"', '"+str(nombre_extraction)+"', '"+str(echec_extraction)+"', '"+str(statut_vcg)+"', '"+str(date_insertion)+"', '"+str(animal.get_numero())+"', '"+str(preleveur.get_numero())+"') \
+		DatabaseManager.cursor.execute("INSERT INTO form_prelevement(plaque,position,date_enregistrement,date_demande,date_extraction,date_reception_lille,type_materiel,dosage,conformite_dosage,code_barre,nombre_extraction,echec_extraction,statut_vcg,date_insertion,animal_id,preleveur_id,to_html) \
+		VALUES('"+str(plaque)+"', '"+str(position)+"', '"+str(date_enregistrement)+"', '"+str(date_demande)+"', '"+str(date_extraction)+"', '"+str(date_reception_lille)+"', '"+str(type_materiel)+"', '"+str(dosage)+"', '"+str(conformite_dosage)+"', '"+str(code_barre)+"', '"+str(nombre_extraction)+"', '"+str(echec_extraction)+"', '"+str(statut_vcg)+"', '"+str(date_insertion)+"', '"+str(animal.get_numero())+"', '"+str(preleveur.get_numero())+"', '"+str(html)+"') \
 		ON CONFLICT(plaque,position) DO UPDATE \
-		SET plaque='"+str(plaque)+"', position='"+str(position)+"', date_enregistrement='"+str(date_enregistrement)+"', date_demande='"+str(date_demande)+"', date_extraction='"+str(date_extraction)+"', date_reception_lille='"+str(date_reception_lille)+"', type_materiel='"+str(type_materiel)+"', dosage='"+str(dosage)+"', conformite_dosage='"+str(conformite_dosage)+"', code_barre='"+str(code_barre)+"', nombre_extraction='"+str(nombre_extraction)+"', echec_extraction='"+str(echec_extraction)+"', statut_vcg='"+str(statut_vcg)+"', date_insertion='"+str(date_insertion)+"', animal_id='"+str(animal.get_numero())+"', preleveur_id='"+str(preleveur.get_numero())+"';")
+		SET plaque='"+str(plaque)+"', position='"+str(position)+"', date_enregistrement='"+str(date_enregistrement)+"', date_demande='"+str(date_demande)+"', date_extraction='"+str(date_extraction)+"', date_reception_lille='"+str(date_reception_lille)+"', type_materiel='"+str(type_materiel)+"', dosage='"+str(dosage)+"', conformite_dosage='"+str(conformite_dosage)+"', code_barre='"+str(code_barre)+"', nombre_extraction='"+str(nombre_extraction)+"', echec_extraction='"+str(echec_extraction)+"', statut_vcg='"+str(statut_vcg)+"', date_insertion='"+str(date_insertion)+"', animal_id='"+str(animal.get_numero())+"', preleveur_id='"+str(preleveur.get_numero())+"', to_html='"+str(html)+"';")
 		DatabaseManager.pg_conn.commit()
 		DatabaseManager.close_connexion()
 		

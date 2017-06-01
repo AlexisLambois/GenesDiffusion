@@ -36,10 +36,7 @@ def go_print(request):
     """ Affichage initial sans recherche """
     
     if len(indice) == 0:
-        temp = PrelevementManager.get_all_prelevements()
-
-        for row in temp:
-            data.append(row.to_array_html())
+        data = PrelevementManager.get_prelevement_to_html([])
             
     else:
         
@@ -110,9 +107,8 @@ def go_print(request):
         temp.clear()
         
         data_temp = DatabaseManager.execute(requete_prelevement)
-        data_temp = PrelevementManager.to_object(data_temp)
-        for row in data_temp:
-            data.append(row.to_array_html())
+
+        data = PrelevementManager.get_prelevement_to_html(data_temp)
           
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')

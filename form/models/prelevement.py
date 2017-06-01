@@ -24,7 +24,8 @@ class Prelevement(models.Model):
     statut_vcg = models.CharField(max_length=2,null=True)
     date_insertion = models.DateField(null=True)
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
-    preleveur = models.ForeignKey(Preleveur, on_delete=models.CASCADE)
+    preleveur = models.ForeignKey(Preleveur, on_delete=models.CASCADE) 
+    to_html = models.CharField(max_length=4999,null=True)
     
     class Meta:
         unique_together = ('plaque','position')
@@ -46,9 +47,11 @@ class Prelevement(models.Model):
             echec_extraction = echec_extraction,
             statut_vcg = statut_vcg,
             date_insertion = date_insertion,
+            to_html = "",
             animal = AnimalManager.get_animal_by_alpha({"numero":animal})[0],
             preleveur = PreleveurManager.get_preleveur_by_alpha({"numero":preleveur})[0]
             )
+        prelevement.set_html(cls.object_to_html(prelevement))
         return prelevement
 
     #----------------------------------------------------------Getter/Setter----------------------------------------------------------#
@@ -97,6 +100,9 @@ class Prelevement(models.Model):
     
     def get_date_insertion(self):
         return self.date_insertion
+    
+    def get_html(self):
+        return self.to_html
     
     def get_animal(self):
         return self.animal
@@ -147,6 +153,9 @@ class Prelevement(models.Model):
         
     def set_date_insertion(self,date_insertion):
         self.date_insertion = date_insertion
+        
+    def set_html(self,html):
+        self.to_html = html
     
     def set_animal(self,animal):
         self.animal = animal
@@ -167,3 +176,20 @@ class Prelevement(models.Model):
     def to_array_html(self):
         return [str(self.get_date_insertion()),str(self.get_plaque()),str(self.get_position()),str(self.get_date_enregistrement()),str(self.get_date_demande()),str(self.get_date_extraction()),str(self.get_date_reception_lille()),str(self.get_type_materiel()),str(self.get_dosage()),str(self.get_conformite_dosage()),str(self.get_code_barre()),str(self.get_nombre_extraction()),str(self.get_echec_extraction()),str(self.get_statut_vcg())] + self.get_animal().to_array_html() + self.get_preleveur().to_array()
 
+    def object_to_html(self):
+        text = ""
+        tab = self.to_array_html()
+        text += "<tr>"
+        for i in range(0,len(tab)):
+            if i < 14 :
+                text+="<td class=\"prelevement\">"+tab[i]+"</td>"
+            elif i >= 14 and i < 24: 
+                text+="<td class=\"animal\">"+tab[i]+"</td>"
+            elif i >= 24 and i < 26:
+                text+="<td class=\"cheptel\">"+tab[i]+"</td>"
+            elif i >= 26 and i < 28:
+                text+="<td class=\"race\">"+tab[i]+"</td>"
+            elif i >= 28:
+                text+="<td class=\"preleveur\">"+tab[i]+"</td>"
+        text += "</tr>"
+        return text

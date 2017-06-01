@@ -4,6 +4,7 @@ function getData(indice,inputs,operateurs){
 		url: "/ajax/printer/",
 		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
 		success: function(data) {
+			console.log(data)
 			affiche_tab(data,"#data");
 		}
 	});
@@ -170,18 +171,17 @@ function show_hide(maclass,bool) {
 	}
 }
 
-function affiche_tab(data,div){
-	$("<table class=\"data\" >").appendTo(div);
-	text = ""
-	for (var i = 0; i < data.length; i++) {
-		text+="<tr>";
-		for (var j = 0; j < data[i].length; j++) {
-			text+="<td>"+data[i][j]+"</td>";
-		}
-		text+="</tr>";
-	}
-	$(text).appendTo(div+" table");
-}
+//function affiche_tab(data,div){
+//	console.log(data);
+//	$("<table class=\"data\" >").appendTo(div);
+//	text = ""
+//	for (var i = 0; i < data.length; i++) {
+//		for (var j = 0; j < data[i].length; j++) {
+//			text+=data[i][j];
+//		}
+//	}
+//	$(text).appendTo(div+" table");
+//}
 
 //--------------------------------------------------------------------------------------------------------//
 
@@ -250,15 +250,9 @@ function affiche_tab(data,div){
 	$("<table class=\"data\" >").appendTo(div);
 	text = ""
 	for (var i = 0; i < data.length; i++) {
-		text+="<tr>";
 		for (var j = 0; j < data[i].length; j++) {
-			if( j < 14 ){text+="<td class=\"prelevement\">"+data[i][j]+"</td>";}
-			else if( j >= 14 && j < 24){text+="<td class=\"animal\">"+data[i][j]+"</td>";}
-			else if( j >= 24 && j < 26){text+="<td class=\"cheptel\">"+data[i][j]+"</td>";}
-			else if( j >= 26 && j < 28){text+="<td class=\"race\">"+data[i][j]+"</td>";}
-			else if( j >= 28){text+="<td class=\"preleveur\">"+data[i][j]+"</td>";}
+			text+=data[i][j];
 		}
-		text+="</tr>";
 	}
 	$(text).appendTo(div+" table");
 	show_hide("prelevement",show[0]);

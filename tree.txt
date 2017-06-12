@@ -61,7 +61,8 @@
 │   │       ├── genotypage.html
 │   │       ├── index.html
 │   │       ├── insert.html
-│   │       └── print.html
+│   │       ├── print.html
+│   │       └── save.html
 │   ├── urls.py
 │   └── views
 │       ├── admin_view.py
@@ -69,7 +70,8 @@
 │       ├── index_view.py
 │       ├── __init__.py
 │       ├── insert_view.py
-│       └── print_view.py
+│       ├── print_view.py
+│       └── save_view.py
 ├── man
 │   └── manuel.odt
 ├── manage.py
@@ -84,4 +86,4 @@
 ├── script.sql
 └── tree.txt
 
-18 directories, 66 files
+18 directories, 68 files

@@ -15,12 +15,6 @@ class RaceManager(object):
             raise TypeError("L'objet n'est pas un Race")
         DatabaseManager.register_race(race.get_numero(), race.get_nom())
 
-    #@staticmethod
-    #def delete(race):
-    #    if not isinstance(race, Race):
-    #        raise TypeError("L'objet n'est pas de type Race")
-    #    DatabaseManager.delete_race(race.get_numero())
-
     @staticmethod
     def get_all_races():
         races = []
@@ -30,21 +24,13 @@ class RaceManager(object):
         return races
 
     @staticmethod
-    def get_race_by_alpha(tosql):
+    def get_race_by(tosql):
         races = []
-        data = DatabaseManager.select_race_by_alpha(tosql)
+        data = DatabaseManager.select_race_by(tosql)
         for row in data:
             races.append(row_to_race(row))
         return races
     
     @staticmethod
-    def get_race_by_beta(tosql):
-        races = []
-        data = DatabaseManager.select_race_by_beta(tosql)
-        for row in data:
-            races.append(row_to_race(row))
-        return races
-    
-    @staticmethod
-    def get_race_by_gamma(tosql):
-        return DatabaseManager.select_race_by_gamma(tosql)
+    def get_race_sous_requete(tosql):
+        return DatabaseManager.select_race_sous_requete(tosql)

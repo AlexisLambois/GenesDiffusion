@@ -48,8 +48,8 @@ class Prelevement(models.Model):
             statut_vcg = statut_vcg,
             date_insertion = date_insertion,
             to_html = "",
-            animal = AnimalManager.get_animal_by_alpha({"numero":animal})[0],
-            preleveur = PreleveurManager.get_preleveur_by_alpha({"numero":preleveur})[0]
+            animal = AnimalManager.get_animal_by({"numero":animal})[0],
+            preleveur = PreleveurManager.get_preleveur_by({"numero":preleveur})[0]
             )
         prelevement.set_html(cls.object_to_html(prelevement))
         return prelevement

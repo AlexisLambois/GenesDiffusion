@@ -67,7 +67,7 @@ def go_print(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_cheptel = CheptelManager.get_cheptel_by_gamma(temp)
+        requete_cheptel = CheptelManager.get_cheptel_sous_requete(temp)
         
         temp.clear()
         
@@ -76,7 +76,7 @@ def go_print(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_race = RaceManager.get_race_by_gamma(temp)
+        requete_race = RaceManager.get_race_sous_requete(temp)
         temp.clear()
         
         for id in search_preleveur:
@@ -84,7 +84,7 @@ def go_print(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_preleveur = PreleveurManager.get_preleveur_by_gamma(temp)
+        requete_preleveur = PreleveurManager.get_preleveur_sous_requete(temp)
         
         temp.clear()
         
@@ -93,7 +93,7 @@ def go_print(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_animal = AnimalManager.get_animal_by_gamma(temp,{"cheptel_id":requete_cheptel,"race_id":requete_race})
+        requete_animal = AnimalManager.get_animal_sous_requete(temp,{"cheptel_id":requete_cheptel,"race_id":requete_race})
         
         temp.clear()
         
@@ -102,7 +102,7 @@ def go_print(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_prelevement = PrelevementManager.get_prelevement_by_gamma(temp,{"animal_id":requete_animal,"preleveur_id":requete_preleveur})
+        requete_prelevement = PrelevementManager.get_prelevement_sous_requete(temp,{"animal_id":requete_animal,"preleveur_id":requete_preleveur})
         
         temp.clear()
         
@@ -158,7 +158,7 @@ def go_save(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_cheptel = CheptelManager.get_cheptel_by_gamma(temp)
+        requete_cheptel = CheptelManager.get_cheptel_sous_requete(temp)
         
         temp.clear()
         
@@ -168,7 +168,7 @@ def go_save(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_race = RaceManager.get_race_by_gamma(temp)
+        requete_race = RaceManager.get_race_sous_requete(temp)
         
         temp.clear()
 
@@ -177,7 +177,7 @@ def go_save(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_preleveur = PreleveurManager.get_preleveur_by_gamma(temp)
+        requete_preleveur = PreleveurManager.get_preleveur_sous_requete(temp)
         
         temp.clear()
 
@@ -186,7 +186,7 @@ def go_save(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_animal = AnimalManager.get_animal_by_gamma(temp,{"cheptel_id":requete_cheptel,"race_id":requete_race})
+        requete_animal = AnimalManager.get_animal_sous_requete(temp,{"cheptel_id":requete_cheptel,"race_id":requete_race})
         
         temp.clear()
 
@@ -195,7 +195,7 @@ def go_save(request):
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
-        requete_prelevement = PrelevementManager.get_prelevement_by_gamma(temp,{"animal_id":requete_animal,"preleveur_id":requete_preleveur})
+        requete_prelevement = PrelevementManager.get_prelevement_sous_requete(temp,{"animal_id":requete_animal,"preleveur_id":requete_preleveur})
         
         temp.clear()
         

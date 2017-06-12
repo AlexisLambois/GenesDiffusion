@@ -18,17 +18,9 @@ class GenotypageManager(object):
         DatabaseManager.register_genotypage(genotypage.get_plaque(), genotypage.get_position(), genotypage.get_format_puce(),genotypage.get_date_debut(),genotypage.get_date_scan(),genotypage.get_callrate(),genotypage.get_link_to_file(),genotypage.get_note(),genotypage.get_prelevement())
     
     @staticmethod
-    def get_genotypage_by_alpha(tosql):
+    def get_genotypage_by(tosql):
         genotypages = []
-        data = DatabaseManager.select_genotypage_by_alpha(tosql)
-        for row in data:
-            genotypages.append(row_to_genotypage(row))
-        return genotypages
-    
-    @staticmethod
-    def get_genotypage_by_beta(tosql):
-        genotypages = []
-        data = DatabaseManager.select_genotypage_by_beta(tosql)
+        data = DatabaseManager.select_genotypage_by(tosql)
         for row in data:
             genotypages.append(row_to_genotypage(row))
         return genotypages
@@ -42,12 +34,5 @@ class GenotypageManager(object):
         return genotypages
     
     @staticmethod
-    def get_genotypage_by_gamma(tosql,sous_requete):
-        requete = "(SELECT numero from form_genotypage WHERE "
-        for cle, valeur in tosql.items():
-            requete += str(cle + "='" + str(valeur) + "' AND ")
-        for cle, valeur in sous_requete.items():
-            requete += str(cle + "=" + str(valeur) + " AND ")
-        requete = requete[0:-5]
-        requete += ")"
-        return requete
+    def get_genotypage_sous_requete(tosql,sous_requete):
+        return DatabaseManager.select_genotypage_sous_requete(tosql, sous_requete)

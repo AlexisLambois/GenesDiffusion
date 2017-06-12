@@ -31,13 +31,13 @@ def go_find(request):
     """ On remplace les data si la recherche est un succes """
     
     if table == 'race':
-        find = RaceManager.get_race_by_beta({"numero":str(id)})
+        find = RaceManager.get_race_by({"numero":"='" + str(id) + "'"})
         if len(find) != 0 : data = find[0].get_nom()
     elif table == 'cheptel':
-        find = CheptelManager.get_cheptel_by_beta({"numero":str(id)})
+        find = CheptelManager.get_cheptel_by({"numero":"='" + str(id) + "'"})
         if len(find) != 0 : data = find[0].get_detenteur()
     else:
-        find = PreleveurManager.get_preleveur_by_beta({"numero":str(id)})
+        find = PreleveurManager.get_preleveur_by({"numero":"='" + str(id) + "'"})
         if len(find) != 0 : data = find[0].get_nom()
     
     return HttpResponse(data)

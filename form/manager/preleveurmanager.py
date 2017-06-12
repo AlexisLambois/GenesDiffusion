@@ -15,24 +15,10 @@ class PreleveurManager(object):
             raise TypeError("L'objet n'est pas un Preleveur")
         DatabaseManager.register_preleveur(preleveur.get_numero(), preleveur.get_nom())
 
-    #@staticmethod
-    #def delete(preleveur):
-    #    if not isinstance(preleveur, Preleveur):
-    #        raise TypeError("L'objet n'est pas de type Preleveur")
-    #    DatabaseManager.delete_preleveur(preleveur.get_numero())
-
     @staticmethod
-    def get_preleveur_by_alpha(tosql):
+    def get_preleveur_by(tosql):
         preleveur = []
-        data = DatabaseManager.select_preleveur_by_alpha(tosql)
-        for row in data:
-            preleveur.append(row_to_preleveur(row))
-        return preleveur
-    
-    @staticmethod
-    def get_preleveur_by_beta(tosql):
-        preleveur = []
-        data = DatabaseManager.select_preleveur_by_beta(tosql)
+        data = DatabaseManager.select_preleveur_by(tosql)
         for row in data:
             preleveur.append(row_to_preleveur(row))
         return preleveur
@@ -46,5 +32,5 @@ class PreleveurManager(object):
         return preleveur
     
     @staticmethod
-    def get_preleveur_by_gamma(tosql):
-        return DatabaseManager.select_preleveur_by_gamma(tosql)
+    def get_preleveur_sous_requete(tosql):
+        return DatabaseManager.select_preleveur_sous_requete(tosql)

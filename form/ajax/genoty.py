@@ -33,7 +33,7 @@ def go_genoty(request):
         temp = Genotypage_PrelevementManager.get_fusion()
 
         for row in temp:
-            data.append(row.to_array())
+            data.append(row.to_html())
             
     else:
         tosql_genotype = {}
@@ -53,9 +53,9 @@ def go_genoty(request):
                     tosql_prelevement.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
         
         data_temp = Genotypage_PrelevementManager.get_fusion_by(tosql_genotype,tosql_prelevement)
-        
+
         for row in data_temp:
-            data.append(row.to_array())
+            data.append(row.to_html())
             
     data = json.dumps(data)
     return HttpResponse(data, content_type='application/json')

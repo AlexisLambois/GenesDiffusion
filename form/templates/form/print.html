@@ -9,7 +9,6 @@
     <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
 </head>
 <body>
-	
 	<div class="container">
 		<div class="balise">
 			<br>
@@ -19,7 +18,7 @@
 			<a onclick=swap(4)>Show Race</a>
 		 	<a onclick=swap(1)>Show Preleveur</a> 
 			<br><br>
-			<a id="save">Save</a>
+			<a onclick="javascript:open_infos();">Save</a>
 			<a href="/">Retour</a>
 			<br><br>
 		</div>
@@ -100,6 +99,7 @@
 		    var indice = indice_change(inputs);
 			saveData(indice,inputs,operateurs);
 		};
+		
 	</script>
 
 </body>

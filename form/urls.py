@@ -8,6 +8,7 @@ from form.views import admin_view
 from form.views import print_view
 from form.views import genotypage_view
 from form.views import index_view
+from form.views import save_view
 
 urlpatterns = [
     
@@ -17,6 +18,7 @@ urlpatterns = [
     url(r'^insert/$', insert_view.insert_view, name='insert_view'),
     url(r'^admin/$', admin_view.admin_view, name='admin_view'),
     url(r'^genotypage/$', genotypage_view.genotypage_view, name='genotypage_view'),
+    url(r'^save/$', save_view.save_view, name='save_view'),
     
     # Url d action
     url(r'^ajax/printer/$', printer.go_print),

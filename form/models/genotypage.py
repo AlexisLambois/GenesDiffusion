@@ -32,7 +32,7 @@ class Genotypage(models.Model):
             callrate = callrate,
             link_to_file = link_to_file,
             note = note,
-            prelevement = PrelevementManager.get_prelevement_by_beta({"plaque":prelevement_plaque,"position":prelevement_position})[0]
+            prelevement = PrelevementManager.get_prelevement_by({"plaque":prelevement_plaque,"position":prelevement_position})[0]
             )
         return genotypage
     

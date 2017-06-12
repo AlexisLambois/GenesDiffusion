@@ -1,10 +1,27 @@
+function open_infos(){
+	document.getElementsByClassName('container')[0].hidden = true;
+	document.getElementsByClassName('infos')[0].hidden = false;
+	text = "<table>";
+	text += "<th>Genotyapge</th>";
+	for (var i = 0; i < genotypage.length; i++) {
+		text += "<tr><td><label>" + genotypage[i] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+	}
+	text += "<th>Prelevement</th>";
+	for (var i = genotypage.length; i < prelevement.length+genotypage.length; i++) {
+		text += "<tr><td><label>" + prelevement[i-genotypage.length] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+	}
+	text += "<tr><td><label>Animal</label><input type=\"checkbox\"value=\"22\"></td></tr>";
+	text += "<tr><td><label>Preleveur</label><input type=\"checkbox\"value=\"23\"></td></tr>";
+	text += "</table>",
+	$(text).appendTo(".form");
+}
+
 function getData(indice,inputs,operateurs){
 	$.ajax({
 		type: "POST",
 		url: "/ajax/printer/",
 		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
 		success: function(data) {
-			console.log(data)
 			affiche_tab(data,"#data");
 		}
 	});

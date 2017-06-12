@@ -32,8 +32,8 @@ class Animal(models.Model):
             pays = pays,
             ordre = ordre,
             date_insertion = date_insertion,
-            cheptel = CheptelManager.get_cheptel_by_alpha({"numero":cheptel})[0],
-            race = RaceManager.get_race_by_alpha({"numero":race})[0]
+            cheptel = CheptelManager.get_cheptel_by({"numero":cheptel})[0],
+            race = RaceManager.get_race_by({"numero":race})[0]
             )
         return animal
         

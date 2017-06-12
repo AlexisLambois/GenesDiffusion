@@ -45,12 +45,12 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_preleveur_by_alpha(tosql):
+	def select_preleveur_by(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_preleveur WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+			requete += get_request_by_type(cle,valeur)
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -59,21 +59,7 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_preleveur_by_beta(tosql):
-		if not tosql : return []
-		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_preleveur WHERE "
-		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + str(valeur) + "' AND ")
-		requete = requete[0:-4]
-		requete += ";"
-		DatabaseManager.cursor.execute(requete)
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_preleveur_by_gamma(tosql):
+	def select_preleveur_sous_requete(tosql):
 		if not tosql : return ""
 		requete = "(SELECT numero from form_preleveur WHERE "
 		for cle, valeur in tosql.items():
@@ -103,12 +89,12 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_race_by_alpha(tosql):
+	def select_race_by(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_race WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+			requete += get_request_by_type(cle,valeur)
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -117,21 +103,7 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_race_by_beta(tosql):
-		if not tosql : return []
-		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_race WHERE "
-		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + str(valeur) + "' AND ")
-		requete = requete[0:-4]
-		requete += ";"
-		DatabaseManager.cursor.execute(requete)
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_race_by_gamma(tosql):
+	def select_race_sous_requete(tosql):
 		if not tosql : return ""
 		requete = "(SELECT numero from form_race WHERE "
 		for cle, valeur in tosql.items():
@@ -161,13 +133,13 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_cheptel_by_alpha(tosql):
+	def select_cheptel_by(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_cheptel WHERE "
 		for cle, valeur in tosql.items():
-			requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
-		requete = requete[0:-4]
+			requete += get_request_by_type(cle,valeur)
+		requete = requete[0:-5]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
@@ -175,21 +147,7 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_cheptel_by_beta(tosql):
-		if not tosql : return []
-		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_cheptel WHERE "
-		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + str(valeur) + "' AND ")
-		requete = requete[0:-4]
-		requete += ";"
-		DatabaseManager.cursor.execute(requete)
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_cheptel_by_gamma(tosql):
+	def select_cheptel_sous_requete(tosql):
 		if not tosql : return ""
 		requete = "(SELECT numero from form_cheptel WHERE "
 		for cle, valeur in tosql.items():
@@ -219,16 +177,12 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_animal_by_alpha(tosql):
+	def select_animal_by(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_animal WHERE "
 		for cle, valeur in tosql.items():
-			if ((re.match(r"^(FALSE|TRUE)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
-				valeur = valeur[0] + valeur[1:len(valeur)].lower()
-				requete += str(cle + "='" + str(valeur) + "' AND ")
-			else:
-				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+			requete += get_request_by_type(cle,valeur)
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -237,21 +191,7 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_animal_by_beta(tosql):
-		if not tosql : return []
-		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_animal WHERE "
-		for cle, valeur in tosql.items():
-			requete += str(cle+"='"+str(valeur)+"' AND ")
-		requete = requete[0:-4]
-		requete += ";"
-		DatabaseManager.cursor.execute(requete)
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_animal_by_gamma(tosql,sous_requete):
+	def select_animal_sous_requete(tosql,sous_requete):
 		no_sous_requete = True
 		requete = "(SELECT numero from form_animal WHERE "
 		if tosql:
@@ -268,7 +208,6 @@ class DatabaseManager(object):
 					requete += get_request_by_type(cle,valeur)
 		requete = requete[0:-5]
 		requete += ")"
-		print(requete)
 		return requete
 
 	@staticmethod
@@ -295,39 +234,22 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_prelevement_by_alpha(tosql):
+	def select_prelevement_by(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_prelevement WHERE "
 		for cle, valeur in tosql.items():
-			if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
-				valeur = str(valeur)[0] + str(valeur)[1:len(str(valeur))].lower()
-				requete += str(cle + "='" + str(valeur) + "' AND ")
-			else:
-				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+			requete += get_request_by_type(cle,valeur)
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
 		data = DatabaseManager.cursor.fetchall()
 		DatabaseManager.close_connexion()
 		return data
+
 	
 	@staticmethod
-	def select_prelevement_by_beta(tosql):
-		if not tosql : return []
-		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_prelevement WHERE "
-		for cle, valeur in tosql.items():
-			requete += str(cle + "='" + str(valeur) + "' AND ")
-		requete = requete[0:-4]
-		requete += ";"
-		DatabaseManager.cursor.execute(requete)
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
-	
-	@staticmethod
-	def select_prelevement_by_gamma(tosql,sous_requete):
+	def select_prelevement_sous_requete(tosql,sous_requete):
 		no_sous_requete = True
 		requete = "(SELECT auto_increment_id from form_prelevement WHERE "
 		if tosql:
@@ -383,16 +305,12 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_genotypage_by_alpha(tosql):
+	def select_genotypage_by(tosql):
 		if not tosql : return []
 		DatabaseManager.open_connexion()
 		requete = "SELECT * FROM form_genotypage WHERE "
 		for cle, valeur in tosql.items():
-			if ((re.match(r"^(False|True)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None) or (re.match(r"^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$",str(valeur))is not None)):
-				valeur = valeur[0] + valeur[1:len(valeur)].lower()
-				requete += str(cle + "='" + str(valeur) + "' AND ")
-			else:
-				requete += str(cle + " LIKE '" + str(valeur) + "%' AND ")
+			requete += get_request_by_type(cle,valeur)
 		requete = requete[0:-4]
 		requete += ";"
 		DatabaseManager.cursor.execute(requete)
@@ -401,18 +319,16 @@ class DatabaseManager(object):
 		return data
 	
 	@staticmethod
-	def select_genotypage_by_beta(tosql):
-		if not tosql : return []
-		DatabaseManager.open_connexion()
-		requete = "SELECT * FROM form_genotypage WHERE "
+	def select_genotypage_sous_requete(tosql,sous_requete):
+		requete = "(SELECT numero from form_genotypage WHERE "
 		for cle, valeur in tosql.items():
 			requete += str(cle + "='" + str(valeur) + "' AND ")
-		requete = requete[0:-4]
-		requete += ";"
-		DatabaseManager.cursor.execute(requete)
-		data = DatabaseManager.cursor.fetchall()
-		DatabaseManager.close_connexion()
-		return data
+		for cle, valeur in sous_requete.items():
+			requete += str(cle + "=" + str(valeur) + " AND ")
+		requete = requete[0:-5]
+		requete += ")"
+		no_sous_requete = True
+		return requete
 
 	@staticmethod
 	def register_genotypage(plaque,position,format_puce,date_debut,date_scan,callrate,link_to_file,note,prelevement):
@@ -458,7 +374,7 @@ class DatabaseManager(object):
 		return data
 	
 def get_request_by_type(cle,valeur):
-	if valeur[0] == "=" or valeur[0] == "<" or valeur[0] == ">":
+	if str(valeur)[0] == "=" or str(valeur)[0] == "<" or str(valeur)[0] == ">":
 		return str(cle + str(valeur) + " AND ")
 	elif (re.match(r"^(FALSE|TRUE)$",str(valeur))is not None) or (re.match(r"^([0-9]+)$",str(valeur))is not None) or (re.match(r"^([0-9]+.[0-9]+)$",str(valeur))is not None):
 		return str(cle + "='" + str(valeur) + "' AND ")

@@ -9,13 +9,22 @@
     <script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
 </head>
 <body>
+
+	<div class="infos" hidden="true">
+		<h1>Colonne a sauvegarder</h1>
+		<form enctype="multipart/form-data">
+			<div class="form">
+				<label>Tout sauvegarder</label><input id="check" type="checkbox" value="all" checked="false">
+			</div>
+		</form>
+		<a href="#" id="save">Export</a>
+	</div> 
 	
 	<div class="container">
-	
 		<div class="balise">
 			<br>
 			<a href="/">Retour</a>
-			<a href="#" id="save">Save</a>
+			<a onclick="javascript:open_infos();">Save</a>
 			<br><br>
 		</div>
 		
@@ -45,20 +54,30 @@
 			
 		<div id="data">
 			<script type="text/javascript">
-				getGenotypage([],[]);
+				getGenotypage([],[],[]);
 			</script>
 		</div>		
 	</div>
 
 	<script type="text/javascript">
 		
+		document.getElementById('check').onclick = function(e) {
+			for (var i = 1 ; i < $('.form input').length ; i++) {
+				if( document.getElementById('check').checked ){
+					$('.form input')[i].checked = true;
+				}else{
+					$('.form input')[i].checked = false;
+				}
+			}
+		};
+		
 		document.onkeydown = function(e) {
 			if(e) {
 				if(e.keyCode===13) { 
 				    var inputs = [];
-				    for (var i = 0 ; i < $('input').length ; i++) {
-				    	if( $('input')[i].type.toLowerCase() == 'text'){
-				    		inputs.push($('input')[i].value.toUpperCase());
+				    for (var i = 0 ; i < $('.container input').length ; i++) {
+				    	if( $('.container input')[i].type.toLowerCase() == 'text'){
+				    		inputs.push($('.container input')[i].value.toUpperCase());
 				    	}
 				    }
 				    var operateurs = [];
@@ -78,9 +97,9 @@
 		
 		document.getElementById('save').onclick = function(){
 			var inputs = [];
-		    for (var i = 0 ; i < $('input').length ; i++) {
-		    	if( $('input')[i].type.toLowerCase() == 'text'){
-		    		inputs.push($('input')[i].value.toUpperCase());
+		    for (var i = 0 ; i < $('.container input').length ; i++) {
+		    	if( $('.container input')[i].type.toLowerCase() == 'text'){
+		    		inputs.push($('.container input')[i].value.toUpperCase());
 		    	}
 		    }
 		    var operateurs = [];
@@ -92,6 +111,15 @@
 		    	operateurs[$('SELECT')[i].name] = ($('SELECT')[i].value);
 		    }
 		    var indice = indice_change(inputs);
+		    
+		    var case_cocher = [];
+		    
+		    for (var i = 1 ; i < $('.form input').length ; i++) {
+				if( document.getElementById('check').checked ){
+					case_cocher.push($('.form input')[i].checked);
+				}
+			}
+		    console.log(case_cocher);
 			saveData_Genoty(indice,inputs,operateurs);
 		};
 		

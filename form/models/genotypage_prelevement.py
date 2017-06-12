@@ -14,6 +14,7 @@ class Genotypage_Prelevement:
         self.callrate = object_to_string(callrate)
         self.link_to_file = object_to_string(link_to_file)
         self.note = object_to_string(note)
+        self.date_insertion = object_to_string(date_insertion)
         self.form_prelevement_plaque = object_to_string(form_prelevement_plaque)
         self.form_prelevement_position = object_to_string(form_prelevement_position)
         self.date_enregistrement = date_to_string(date_enregistrement)
@@ -27,13 +28,39 @@ class Genotypage_Prelevement:
         self.nombre_extraction = object_to_string(nombre_extraction)
         self.echec_extraction = object_to_string(echec_extraction)
         self.statut_vcg = object_to_string(statut_vcg)
-        self.date_insertion = date_to_string(date_insertion)
         self.animal_id = object_to_string(animal_id)
         self.preleveur_id = object_to_string(preleveur_id)
         
     def to_array(self): 
         return [self.form_genotypage_plaque,self.form_genotypage_position,self.format_puce,self.date_debut,self.date_scan,self.callrate,self.link_to_file,self.note,self.date_insertion,self.form_prelevement_plaque,self.form_prelevement_position,self.date_enregistrement,self.date_demande,self.date_extraction,self.date_reception_lille,self.type_materiel,self.dosage,self.conformite_dosage,self.code_barre,self.nombre_extraction,self.echec_extraction,self.statut_vcg,self.animal_id,self.preleveur_id]
 
+    def to_html(self):
+        html = "<tr><td>"+str(self.form_genotypage_plaque)+"</td>"
+        html += "<td>"+str(self.form_genotypage_position)+"</td>"
+        html += "<td>"+str(self.format_puce)+"</td>"
+        html += "<td>"+str(self.date_debut)+"</td>"
+        html += "<td>"+str(self.date_scan)+"</td>"
+        html += "<td>"+str(self.callrate)+"</td>"
+        html += "<td>"+str(self.link_to_file)+"</td>"
+        html += "<td>"+str(self.note)+"</td>"
+        html += "<td>"+str(self.date_insertion)+"</td>"
+        html += "<td>"+str(self.form_prelevement_plaque)+"</td>"
+        html += "<td>"+str(self.form_prelevement_position)+"</td>"
+        html += "<td>"+str(self.date_enregistrement)+"</td>"
+        html += "<td>"+str(self.date_demande)+"</td>"
+        html += "<td>"+str(self.date_extraction)+"</td>"
+        html += "<td>"+str(self.date_reception_lille)+"</td>"
+        html += "<td>"+str(self.type_materiel)+"</td>"
+        html += "<td>"+str(self.dosage)+"</td>"
+        html += "<td>"+str(self.conformite_dosage)+"</td>"
+        html += "<td>"+str(self.code_barre)+"</td>"
+        html += "<td>"+str(self.nombre_extraction)+"</td>"
+        html += "<td>"+str(self.echec_extraction)+"</td>"
+        html += "<td>"+str(self.statut_vcg)+"</td>"
+        html += "<td>"+str(self.animal_id)+"</td>"
+        html += "<td>"+str(self.preleveur_id)+"</td></tr>"
+        return html
+    
 def date_to_string(date):
     if date == None : 
         return "" 

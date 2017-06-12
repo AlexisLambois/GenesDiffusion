@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.html import format_html
 
 class Preleveur(models.Model):
     numero = models.CharField(max_length=20,primary_key=True)

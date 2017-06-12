@@ -5,11 +5,11 @@ Created on 26 avr. 2017
 '''
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from ..manager.racemanager import RaceManager
-from ..manager.cheptelmanager import CheptelManager
-from ..manager.preleveurmanager import PreleveurManager
-from ..models.race import Race
-from ..models.cheptel import Cheptel
+from form.manager.racemanager import RaceManager
+from form.manager.cheptelmanager import CheptelManager
+from form.manager.preleveurmanager import PreleveurManager
+from form.models.race import Race
+from form.models.cheptel import Cheptel
 from form.models.preleveur import Preleveur
 import os,time
 from django.conf import settings

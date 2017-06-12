@@ -7,7 +7,6 @@ from django.shortcuts import render
 from django.conf import settings
 import csv,re,json
 from django.core.files.storage import FileSystemStorage
-from django.utils.html import format_html
 from django.views.decorators.csrf import csrf_exempt
 from pyexcel_ods import get_data
 from openpyxl import load_workbook
@@ -100,8 +99,8 @@ def find_data_changed_prelev(data):
     id_data_changed = []
     for i in range(1,len(data)-2):
   
-        if len(PrelevementManager.get_prelevement_by_alpha({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
-            old_prelevement = (PrelevementManager.get_prelevement_by_alpha({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
+        if len(PrelevementManager.get_prelevement_by({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
+            old_prelevement = (PrelevementManager.get_prelevement_by({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
             temp = []
             
             for j in range(0,len(data[i])):
@@ -109,7 +108,7 @@ def find_data_changed_prelev(data):
                 if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(data[i][j])) is not None:
                     split = str(split[6:10]+"-"+split[3:5]+"-"+split[0:2])
                 
-                if str(split).upper() != str(old_prelevement[j]):
+                if str(split).upper() != str(old_prelevement[j]).upper():
                     temp.append(j)
                     
             id_data_changed.append(temp)
@@ -119,8 +118,8 @@ def find_data_changed_animal(data):
     id_data_changed = []
     for i in range(1,len(data)-2):
         
-        if len(AnimalManager.get_animal_by_alpha({"numero":data[i][0]})) != 0 :  
-            old_animal = (AnimalManager.get_animal_by_alpha({"numero":data[i][0]})[0]).to_array()
+        if len(AnimalManager.get_animal_by({"numero":data[i][0]})) != 0 :  
+            old_animal = (AnimalManager.get_animal_by({"numero":data[i][0]})[0]).to_array()
             temp = []
        
             for j in range(0,len(data[i])):
@@ -139,8 +138,8 @@ def find_data_changed_genoty(data):
     id_data_changed = []
     for i in range(1,len(data)-2):
 
-        if len(GenotypageManager.get_genotypage_by_beta({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
-            old_genotypage = (GenotypageManager.get_genotypage_by_beta({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
+        if len(GenotypageManager.get_genotypage_by({"plaque":data[i][0],"position":data[i][1]})) != 0 :  
+            old_genotypage = (GenotypageManager.get_genotypage_by({"plaque":data[i][0],"position":data[i][1]})[0]).to_array()
             temp = []
             
             for j in range(0,len(data[i])):
@@ -165,8 +164,8 @@ def dara_row_verif_animal(row):
     if re.match(r"^[A-Z0-9]{5,20}$",str(row[5]))is None :  tab_validation.append(5)
     if re.match(r"^[A-Z]{2}$",str(row[6]))is None :  tab_validation.append(6)
     if re.match(r"^(False|True)$",str(row[7]))is None :  tab_validation.append(7)
-    if len(CheptelManager.get_cheptel_by_beta({"numero":row[8]})) == 0 : tab_validation.append(8)
-    if len(RaceManager.get_race_by_beta({"numero":row[9]})) == 0 : tab_validation.append(9)
+    if len(CheptelManager.get_cheptel_by({"numero":row[8]})) == 0 : tab_validation.append(8)
+    if len(RaceManager.get_race_by({"numero":row[9]})) == 0 : tab_validation.append(9)
     return tab_validation
 
 def dara_row_verif_prele(row):
@@ -184,8 +183,8 @@ def dara_row_verif_prele(row):
     if re.match(r"^[0-9]*$",str(row[10]).upper())is None :  tab_validation.append(10)
     if re.match(r"^[A-Z0-9]*$",str(row[11]).upper())is None :  tab_validation.append(11)
     if re.match(r"^[0-9]{2}$",str(row[12]).upper())is None :  tab_validation.append(12)
-    if len(AnimalManager.get_animal_by_beta({"numero":row[13]})) == 0 : tab_validation.append(13)
-    if len(PreleveurManager.get_preleveur_by_beta({"numero":row[14]})) == 0 : tab_validation.append(14)
+    if len(AnimalManager.get_animal_by({"numero":row[13]})) == 0 : tab_validation.append(13)
+    if len(PreleveurManager.get_preleveur_by({"numero":row[14]})) == 0 : tab_validation.append(14)
     return tab_validation
 
 def dara_row_verif_genoty(row):
@@ -196,7 +195,7 @@ def dara_row_verif_genoty(row):
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[3]).upper()) is None :  tab_validation.append(3)
     if re.match(r"^(0?\d|[12]\d|3[01])/(0?\d|1[012])/((?:19|20)\d{2})$",str(row[4]).upper())is None :  tab_validation.append(4)
     if re.match(r"^[0-9]{1,3}\.?[0-9]{1,2}$",str(row[5]).upper())is None :  tab_validation.append(5)
-    if len(PrelevementManager.get_prelevement_by_beta({"plaque":row[8],"position":row[9]})) == 0 : 
+    if len(PrelevementManager.get_prelevement_by({"plaque":row[8],"position":row[9]})) == 0 : 
         tab_validation.append(8)
         tab_validation.append(9)
     return tab_validation

@@ -10,6 +10,7 @@ from form.manager.genotypage_prelevementmanager import Genotypage_PrelevementMan
 import json,os,time,csv
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+import numpy as np
 
 """ Tableau des noms sql des colonnes dans l'ordre de saisie """
 
@@ -69,15 +70,20 @@ def go_save(request):
     for i in request.POST.getlist('indice[]'):
         indice.append(int(i))
     inputs = request.POST.getlist('inputs[]')
-    operateurs = request.GET.getlist('operateurs[]')
+    operateurs = []
+    for i in request.POST.getlist('operateurs[]'):
+        operateurs.append((i))
+    case_cocher = []
+    for i in request.POST.getlist('case_cocher[]'):
+        case_cocher.append(int(i))
     
     data = []
     
+    if len(case_cocher) == 0 :
+        return HttpResponse(data)
+    
     if len(indice) == 0:
-        temp = Genotypage_PrelevementManager.get_fusion()
-
-        for row in temp:
-            data.append(row.to_array())
+        data_temp = Genotypage_PrelevementManager.get_fusion()
             
     else:
         tosql_genotype = {}
@@ -97,11 +103,22 @@ def go_save(request):
                     tosql_prelevement.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
         
         data_temp = Genotypage_PrelevementManager.get_fusion_by(tosql_genotype,tosql_prelevement)
+
         
+    if len(case_cocher) == 24:
         for row in data_temp:
             data.append(row.to_array())
-                
-    """ Ecrture dans un csv des lignes selectionnees """
+    else:
+        data_second = []
+        
+        for row in data_temp:
+            data_second.append(row.to_array())
+            
+        data_second = np.array(data_second)
+
+        data = data_second[:, case_cocher]
+        
+    """ Ecrture dans un csv des lignes et colonnes selectionnees """
     
     write_to_file(data)
     return HttpResponse(data)  

@@ -1,19 +1,58 @@
-function open_infos(){
+var created_infos_genotypage = false;
+var created_infos_prelevement = false;
+
+function open_infos_genotypage(){
 	document.getElementsByClassName('container')[0].hidden = true;
 	document.getElementsByClassName('infos')[0].hidden = false;
-	text = "<table>";
-	text += "<th>Genotyapge</th>";
-	for (var i = 0; i < genotypage.length; i++) {
-		text += "<tr><td><label>" + genotypage[i] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+	if (!created_infos_genotypage) {
+		document.getElementById('check').checked = false;
+		text = "<table>";
+		text += "<th>Genotyapge</th>";
+		for (var i = 0; i < genotypage.length; i++) {
+			text += "<tr><td><label>" + genotypage[i] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "<th>Prelevement</th>";
+		for (var i = genotypage.length; i < prelevement.length+genotypage.length; i++) {
+			text += "<tr><td><label>" + prelevement[i-genotypage.length] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "<tr><td><label>Animal</label><input type=\"checkbox\"value=\"22\"></td></tr>";
+		text += "<tr><td><label>Preleveur</label><input type=\"checkbox\"value=\"23\"></td></tr>";
+		text += "</table>",
+		$(text).appendTo(".form");
+		created_infos_genotypage = true;
 	}
-	text += "<th>Prelevement</th>";
-	for (var i = genotypage.length; i < prelevement.length+genotypage.length; i++) {
-		text += "<tr><td><label>" + prelevement[i-genotypage.length] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+}
+
+function open_infos_prelevement(){
+	document.getElementsByClassName('container')[0].hidden = true;
+	document.getElementsByClassName('infos')[0].hidden = false;
+	if (!created_infos_prelevement) {
+		document.getElementById('check').checked = false;
+		text = "<table>";
+		text += "<th>Prelevement</th>";
+		for (var i = 0; i < prelevement.length; i++) {
+			text += "<tr><td><label>" + prelevement[i] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "<th>Animal</th>";
+		for (var i = prelevement.length; i < animal.length+prelevement.length; i++) {
+			text += "<tr><td><label>" + animal[i-prelevement.length] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "<th>Cheptel</th>";
+		for (var i = prelevement.length+animal.length; i < animal.length+prelevement.length+cheptel.length; i++) {
+			text += "<tr><td><label>" + cheptel[i-(prelevement.length+animal.length)] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "<th>Race</th>";
+		for (var i = prelevement.length+animal.length+cheptel.length; i < animal.length+prelevement.length+cheptel.length+race.length; i++) {
+			text += "<tr><td><label>" + race[i-(prelevement.length+animal.length+cheptel.length)] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "<th>Preleveur</th>";
+		for (var i = prelevement.length+animal.length+cheptel.length+race.length; i < animal.length+prelevement.length+cheptel.length+race.length+preleveur.length; i++) {
+			text += "<tr><td><label>" + preleveur[i-(prelevement.length+animal.length+cheptel.length+race.length)] + "</label><input type=\"checkbox\"value=\"" + i + "\"></td></tr>";
+		}
+		text += "</table>",
+		$(text).appendTo(".form");
+		created_infos_prelevement = true;
 	}
-	text += "<tr><td><label>Animal</label><input type=\"checkbox\"value=\"22\"></td></tr>";
-	text += "<tr><td><label>Preleveur</label><input type=\"checkbox\"value=\"23\"></td></tr>";
-	text += "</table>",
-	$(text).appendTo(".form");
 }
 
 function getData(indice,inputs,operateurs){
@@ -51,24 +90,26 @@ function insertAnimal(data){
 	});
 };
 
-function saveData(indice,inputs,operateurs){
+function saveData(indice,inputs,operateurs,case_cocher){
 	$.ajax({
 		type: "POST",
 		url: "/ajax/save/",
-		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
+		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs,'case_cocher':case_cocher},
 		success: function(data) {
-			
+			document.getElementsByClassName('container')[0].hidden = false;
+			document.getElementsByClassName('infos')[0].hidden = true;
 		}
 	});
 };
 
-function saveData_Genoty(indice,inputs,operateurs){
+function saveData_Genoty(indice,inputs,operateurs,case_cocher){
 	$.ajax({
 		type: "POST",
 		url: "/ajax/save_geno/",
-		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs},
+		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs,'case_cocher':case_cocher},
 		success: function(data) {
-			
+			document.getElementsByClassName('container')[0].hidden = false;
+			document.getElementsByClassName('infos')[0].hidden = true;
 		}
 	});
 };

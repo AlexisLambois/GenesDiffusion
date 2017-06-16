@@ -14,7 +14,8 @@
 		<h1>Colonne a sauvegarder</h1>
 		<form enctype="multipart/form-data">
 			<div class="form">
-				<label>Tout sauvegarder</label><input id="check" type="checkbox" value="all" checked="false">
+				<label>Tout sauvegarder</label>
+				<input id="check" type="checkbox" value="all">
 			</div>
 		</form>
 		<a href="#" id="save">Export</a>
@@ -24,7 +25,7 @@
 		<div class="balise">
 			<br>
 			<a href="/">Retour</a>
-			<a onclick="javascript:open_infos();">Save</a>
+			<a onclick="javascript:open_infos_genotypage();">Save</a>
 			<br><br>
 		</div>
 		
@@ -115,12 +116,12 @@
 		    var case_cocher = [];
 		    
 		    for (var i = 1 ; i < $('.form input').length ; i++) {
-				if( document.getElementById('check').checked ){
-					case_cocher.push($('.form input')[i].checked);
+				if( $('.form input')[i].checked ){
+					case_cocher.push($('.form input')[i].value);
 				}
 			}
-		    console.log(case_cocher);
-			saveData_Genoty(indice,inputs,operateurs);
+
+			saveData_Genoty(indice,inputs,operateurs,case_cocher);
 		};
 		
 	</script>

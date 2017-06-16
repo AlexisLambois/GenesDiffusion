@@ -7,7 +7,7 @@ Affichage des data sur la page de recherche/consultation
 '''
 from django.http import HttpResponse
 from form.manager.prelevementmanager import PrelevementManager
-import json,os,csv,time,collections
+import json,os,csv,time,collections,re
 from django.conf import settings
 from form.manager.racemanager import RaceManager
 from form.manager.cheptelmanager import CheptelManager
@@ -121,14 +121,19 @@ def go_save(request):
         indice.append(int(i))
     inputs = request.POST.getlist('inputs[]')
     operateurs = request.POST.getlist('operateurs[]')
-    
+    case_cocher = []
+    for i in request.POST.getlist('case_cocher[]'):
+        case_cocher.append(int(i))
+        
     data = []
     
+    if len(case_cocher) == 0 :
+        return HttpResponse(data)
+    
     if len(indice) == 0:
-        temp = PrelevementManager.get_all_prelevements()
-
-        for row in temp:
-            data.append(row)
+        
+        data = PrelevementManager.get_prelevement_to_html([])
+    
     else:
 
         """ Cas de recherche """
@@ -162,16 +167,14 @@ def go_save(request):
         
         temp.clear()
         
-        temp = {}
         for id in search_race:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
         requete_race = RaceManager.get_race_sous_requete(temp)
-        
         temp.clear()
-
+        
         for id in search_preleveur:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -180,7 +183,7 @@ def go_save(request):
         requete_preleveur = PreleveurManager.get_preleveur_sous_requete(temp)
         
         temp.clear()
-
+        
         for id in search_animal:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -189,7 +192,7 @@ def go_save(request):
         requete_animal = AnimalManager.get_animal_sous_requete(temp,{"cheptel_id":requete_cheptel,"race_id":requete_race})
         
         temp.clear()
-
+        
         for id in search_prelevement:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -200,10 +203,33 @@ def go_save(request):
         temp.clear()
         
         data_temp = DatabaseManager.execute(requete_prelevement)
-        data_temp = PrelevementManager.to_object(data_temp)
-        for row in data_temp:
-            data.append(row.to_array_html())
-                
+
+        data = PrelevementManager.get_prelevement_to_html(data_temp)
+    
+    data_temp = []
+    re1='>(.*?)<'
+    
+    if len(case_cocher) != 30:  
+        
+        for row in data:
+            temp = re.findall(re1, row[0])
+            row_temp = []
+            for num in case_cocher:
+                row_temp.append(temp[(num*2+1)])
+            data_temp.append(row_temp)
+        
+    else:
+        
+        for row in data:
+            temp = re.findall(re1, row[0])
+            row_temp = []
+            for id_champ in range(0,len(temp)):
+                if id_champ%2 != 0:
+                    row_temp.append(temp[id_champ])
+            data_temp.append(row_temp)
+            
+    data = data_temp
+        
     write_to_file(data)
     return HttpResponse(data)  
 

@@ -1,4 +1,5 @@
 .
+├── archive
 ├── db.sqlite3
 ├── form
 │   ├── admin.py
@@ -9,6 +10,11 @@
 │   │   ├── insert.py
 │   │   └── printer.py
 │   ├── apps.py
+│   ├── auto_scripts
+│   │   ├── __init__.py
+│   │   ├── __init__.pyc
+│   │   ├── insert_auto.py
+│   │   └── insert_auto.pyc
 │   ├── __init__.py
 │   ├── manager
 │   │   ├── animalmanager.py
@@ -80,8 +86,19 @@
 │   ├── urls.py
 │   └── wsgi.py
 ├── README.md
+├── resultats
+│   ├── archive
+│   ├── error
+│   ├── file_to_insert
+│   │   ├── animal_4_20.ods
+│   │   ├── animal_6_20h45.ods
+│   │   ├── animal_6_23h.ods
+│   │   ├── Nouveau document
+│   │   ├── prelevement_4_20h.ods
+│   │   └── prelevement_5_23h.ods
+│   └── logs
 ├── script.sh
 ├── script.sql
 └── tree.txt
 
-18 directories, 66 files
+25 directories, 76 files

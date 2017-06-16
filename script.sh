@@ -9,5 +9,8 @@ rm form/*.pyc
 rm form/views/*.pyc
 rm Project/*.pyc
 rm -rf media/*
+mv resultats/archive/* resultats/file_to_insert/
+mv resultats/error/* resultats/file_to_insert/
+rm resultats/logs/*
 tree > tree.txt
 exit 0

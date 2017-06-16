@@ -29,7 +29,6 @@ class CheptelManager(object):
     def get_cheptel_by(tosql):
         cheptels = []
         data = DatabaseManager.select_cheptel_by(tosql)
-        print(data)
         for row in data:
             cheptels.append(row_to_cheptel(row))
         return cheptels

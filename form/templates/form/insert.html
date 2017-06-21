@@ -65,9 +65,13 @@
 		<script type="text/javascript">
 			show_hide_class("valider");
 			var valide = search_error({{ error_data }});
- 	 		if (valide) {
-	 			document.getElementById("valider").disabled = "true";
- 	 		}
+			if(sessionStorage.getItem('droit')){
+				if (valide) {
+		 			document.getElementById("valider").disabled = "true";
+	 	 		}
+			}else{
+				document.location.href="/";
+			}
 		</script>
 	{% endif %}
 </body>

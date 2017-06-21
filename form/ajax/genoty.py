@@ -37,12 +37,24 @@ def go_genoty(request):
             data.append(row.to_html())
             
     else:
+        
+        """ Recherche avec les saisie : 
+            superieur a 8 on interroge la table genotypage 
+            sinon la table prelevement """
+            
         tosql_genotype = {}
         tosql_prelevement = {}
         
         for id in indice:
             
+            """ id represente ici sur quelle colonne se place le notre curseur de recherche ex: id=0 est la colonne form_genotypage.plaque ( cf tab_entete )"""
+            
             if id < 8 :
+                
+                """ On separe les dates des autres recherches :
+                    si un operateur ( sup,inf ou egal) n'est pas present sur la colonne numero id on effectue une requete simple
+                    sinon on modifie la requete en ajoutant un operateur """
+                
                 if operateurs[id] == "":
                     tosql_genotype.update({tab_entete[id]:inputs[id]})
                 else:
@@ -52,6 +64,8 @@ def go_genoty(request):
                     tosql_prelevement.update({tab_entete[id]:inputs[id]})
                 else:
                     tosql_prelevement.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
+        
+        """ On demande la fusion avec les recherches faites sur les deux tables """
         
         data_temp = Genotypage_PrelevementManager.get_fusion_by(tosql_genotype,tosql_prelevement)
 
@@ -73,14 +87,21 @@ def go_save(request):
     operateurs = []
     for i in request.POST.getlist('operateurs[]'):
         operateurs.append((i))
+        
+    """ Avec en plus les colonnes demandees par l utilisateur """
+    
     case_cocher = []
     for i in request.POST.getlist('case_cocher[]'):
         case_cocher.append(int(i))
     
     data = []
     
+    """ Si rien est demande on ne fait aucune sauvegarde """
+    
     if len(case_cocher) == 0 :
         return HttpResponse(data)
+    
+    """ Cas de recherche sans criteres """
     
     if len(indice) == 0:
         data_temp = Genotypage_PrelevementManager.get_fusion()
@@ -91,7 +112,14 @@ def go_save(request):
         
         for id in indice:
             
+            """ id represente ici sur quelle colonne se place le notre curseur de recherche ex: id=0 est la colonne form_genotypage.plaque ( cf tab_entete )"""
+            
             if id < 8 :
+                
+                """ On separe les dates des autres recherches :
+                    si un operateur ( sup,inf ou egal) n'est pas present sur la colonne numero id on effectue une requete simple
+                    sinon on modifie la requete en ajoutant un operateur """
+                    
                 if operateurs[id] == "":
                     tosql_genotype.update({tab_entete[id]:inputs[id]})
                 else:
@@ -101,14 +129,20 @@ def go_save(request):
                     tosql_prelevement.update({tab_entete[id]:inputs[id]})
                 else:
                     tosql_prelevement.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
+                    
+        """ On demande la fusion avec les recherches faites sur les deux tables """
         
         data_temp = Genotypage_PrelevementManager.get_fusion_by(tosql_genotype,tosql_prelevement)
 
-        
+    """ Cas ou l utilisateur veut toutes les colonnes """
+    
     if len(case_cocher) == 24:
         for row in data_temp:
             data.append(row.to_array())
     else:
+        
+        """ Cas ou on recupere que les colonnes presentes dans case_cocher """
+        
         data_second = []
         
         for row in data_temp:

@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models.animal import Animal
-from .models.cheptel import Cheptel
-from .models.race import Race
-from .models.preleveur import Preleveur
-from .models.prelevement import Prelevement
+from form.models.animal import Animal
+from form.models.cheptel import Cheptel
+from form.models.race import Race
+from form.models.preleveur import Preleveur
+from form.models.prelevement import Prelevement
 from form.models.genotypage import Genotypage
 
 admin.site.register(Cheptel)

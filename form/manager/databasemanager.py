@@ -373,6 +373,26 @@ class DatabaseManager(object):
 		DatabaseManager.close_connexion()
 		return data
 	
+	#----------------------------------------------------------User----------------------------------------------------------#
+	@staticmethod
+	def select_user(id):
+		DatabaseManager.open_connexion()
+		requete = "SELECT * from form_user WHERE id='"+id+"';"
+		DatabaseManager.cursor.execute(requete)
+		data = DatabaseManager.cursor.fetchall()
+		DatabaseManager.close_connexion()
+		return data
+	
+	@staticmethod
+	def register_user(id,mdp,droit_insertion):
+		DatabaseManager.open_connexion()
+		DatabaseManager.cursor.execute("INSERT INTO form_user (id,mdp,droit_insertion) \
+		VALUES('"+str(id)+"', '"+str(mdp)+"', '"+str(droit_insertion)+"') \
+		ON CONFLICT(id) DO UPDATE \
+		SET id='"+str(id)+"', mdp='"+str(mdp)+"', droit_insertion='"+str(droit_insertion)+"';")
+		DatabaseManager.pg_conn.commit()
+		DatabaseManager.close_connexion()
+	
 def get_request_by_type(cle,valeur):
 	if str(valeur)[0] == "=" or str(valeur)[0] == "<" or str(valeur)[0] == ">":
 		return str(cle + str(valeur) + " AND ")

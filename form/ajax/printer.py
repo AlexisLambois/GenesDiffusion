@@ -41,11 +41,13 @@ def go_print(request):
     else:
         
         """ Cas de recherche """
+        
         search_race = []
         search_cheptel = []
         search_animal = []
         search_preleveur = []
         search_prelevement = []
+        
         """ Pour chaque changement on verifie quelle table doit recevoir une requete """
         
         for id in indice:
@@ -61,8 +63,10 @@ def go_print(request):
                 search_prelevement.append(id)
                 
         temp = {}
+        
+        """ On construit une requete concernant la table cheptel en pretant bie attention si la recherche est faites sur une date """
+        
         for id in search_cheptel:
-            print(id)
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
             else:
@@ -71,13 +75,18 @@ def go_print(request):
         
         temp.clear()
         
+        """ On construit une requete concernant la table race en pretant bie attention si la recherche est faites sur une date """
+        
         for id in search_race:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
         requete_race = RaceManager.get_race_sous_requete(temp)
+        
         temp.clear()
+        
+        """ On construit une requete concernant la table preleveur en pretant bie attention si la recherche est faites sur une date """
         
         for id in search_preleveur:
             if operateurs[id] == "":
@@ -88,6 +97,9 @@ def go_print(request):
         
         temp.clear()
         
+        """ On construit une requete concernant la table animal en pretant bie attention si la recherche est faites sur une date 
+            La difference ici est qu on ajoute les requetes de cheptel et race pour construire une requete compose de ses sous requete"""
+        
         for id in search_animal:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -97,6 +109,9 @@ def go_print(request):
         
         temp.clear()
         
+        """ On construit une requete concernant la table prelevement en pretant bie attention si la recherche est faites sur une date 
+            La difference ici est qu on ajoute les requetes de animal et preleveur pour construire une requete compose de ses sous requete"""
+            
         for id in search_prelevement:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -106,8 +121,12 @@ def go_print(request):
         
         temp.clear()
         
+        """ On execute la requete construite tout au long du programme """
+        
         data_temp = DatabaseManager.execute(requete_prelevement)
 
+        """ On va chercher le code html garder en table pour aller plus vite """
+        
         data = PrelevementManager.get_prelevement_to_html(data_temp)
           
     data = json.dumps(data)
@@ -137,11 +156,13 @@ def go_save(request):
     else:
 
         """ Cas de recherche """
+        
         search_race = []
         search_cheptel = []
         search_animal = []
         search_preleveur = []
         search_prelevement = []
+        
         """ Pour chaque changement on verifie quelle table doit recevoir une requete """
         
         for id in indice:
@@ -157,8 +178,10 @@ def go_save(request):
                 search_prelevement.append(id)
                 
         temp = {}
+        
+        """ On construit une requete concernant la table cheptel en pretant bie attention si la recherche est faites sur une date """
+        
         for id in search_cheptel:
-            print(id)
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
             else:
@@ -167,13 +190,18 @@ def go_save(request):
         
         temp.clear()
         
+        """ On construit une requete concernant la table race en pretant bie attention si la recherche est faites sur une date """
+        
         for id in search_race:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
             else:
                 temp.update({tab_entete[id]:str(operateurs[id]+"'"+inputs[id]+"'")})
         requete_race = RaceManager.get_race_sous_requete(temp)
+        
         temp.clear()
+        
+        """ On construit une requete concernant la table preleveur en pretant bie attention si la recherche est faites sur une date """
         
         for id in search_preleveur:
             if operateurs[id] == "":
@@ -184,6 +212,9 @@ def go_save(request):
         
         temp.clear()
         
+        """ On construit une requete concernant la table animal en pretant bie attention si la recherche est faites sur une date 
+            La difference ici est qu on ajoute les requetes de cheptel et race pour construire une requete compose de ses sous requete"""
+        
         for id in search_animal:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -193,6 +224,9 @@ def go_save(request):
         
         temp.clear()
         
+        """ On construit une requete concernant la table prelevement en pretant bie attention si la recherche est faites sur une date 
+            La difference ici est qu on ajoute les requetes de animal et preleveur pour construire une requete compose de ses sous requete"""
+            
         for id in search_prelevement:
             if operateurs[id] == "":
                 temp.update({tab_entete[id]:inputs[id]})
@@ -202,12 +236,18 @@ def go_save(request):
         
         temp.clear()
         
+        """ On execute la requete construite tout au long du programme """
+        
         data_temp = DatabaseManager.execute(requete_prelevement)
 
+        """ On va chercher le code html garder en table pour aller plus vite """
+        
         data = PrelevementManager.get_prelevement_to_html(data_temp)
     
     data_temp = []
     re1='>(.*?)<'
+    
+    """ Savegarde d une partie des colonnes precisees dans case_cocher """
     
     if len(case_cocher) != 30:  
         
@@ -220,6 +260,8 @@ def go_save(request):
         
     else:
         
+        """ Sauvegarde de toutes les colonnes en parsant le code html """
+         
         for row in data:
             temp = re.findall(re1, row[0])
             row_temp = []
@@ -246,6 +288,9 @@ def write_to_file(data):
     for prelve in data: 
         c.writerow(prelve)
     w_file.close()  
+
+""" Sort sur la colonne ordre """
+#Methode non utilise
 
 def sort_by_ordre(tab_animal):
     temp = {}

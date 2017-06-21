@@ -1,15 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Accueil</title>
+	<meta charset="UTF-8">
+	{% load static %}	
+	<title>Accueil</title>
+	<link href="{% static "form/css/style2.css" %}" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static "form/js/main.js" %}"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 </head>
 <body>
-
-	<a href="print/" >Prelevement</a>
-	<a href="genotypage/" >Genotypage</a>
-	<a href="insert/" >Insertion</a>
-	<a href="admin/" >Admin</a>
+	
+	<div class="connec">
+		<form  enctype="multipart/form-data" action="" method="post">
+    		{% csrf_token %}
+    		<label>Nom/Mail</label>
+    		<input type="text" name="id" required><br>
+    		<label>Mot De Passe</label>
+    		<input type="password" name="pwd" required><br>
+    		<input type="submit" value="Connection"/>
+    	</form>
+	</div>
+	<br>
+	
+	<div class="container" hidden="true">
+		<a href="print/" >Prelevement</a>
+		<a href="genotypage/" >Genotypage</a>
+		<a href="insert/" class="for_admin" hidden="true">Insertion</a>
+		<a href="admin/" class="for_admin" hidden="true">Admin</a>
+	</div>
+	
+	{% if data %} 
+		<script type="text/javascript">
+			session = {{ data|safe }}
+			sessionStorage.clear();
+			sessionStorage.setItem("user", session[0]);
+			sessionStorage.setItem("droit", session[1] );
+			console.log(document.getElementsByClassName('container')[0]);
+			document.getElementsByClassName('container')[0].hidden = false;
+			console.log(session);
+			if ( session[1]){
+				document.getElementsByClassName('for_admin')[0].hidden = false;
+				document.getElementsByClassName('for_admin')[1].hidden = false;
+			}
+		</script>
+	{%endif%}
 	
 </body>
 </html>

@@ -21,7 +21,7 @@
 	border: 3px black solid;
 	text-decoration: none;
 	padding: 5px;
-	cursor: pointer;
+	cursor: pointer; 
 }
 
 .container a:visited {
@@ -58,4 +58,11 @@
 
 .form{
 	margin-left: 5%;
+}
+
+.connec{
+	margin-top:10%;
+	margin-left: 35%;
+	width:30%;
+	margin-right: 35%;
 }

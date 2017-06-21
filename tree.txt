@@ -25,12 +25,11 @@
 │   │   ├── __init__.py
 │   │   ├── prelevementmanager.py
 │   │   ├── preleveurmanager.py
-│   │   └── racemanager.py
+│   │   ├── racemanager.py
+│   │   └── usermanager.py
 │   ├── migrations
 │   │   ├── 0001_initial.py
-│   │   ├── 0002_auto_20170515_1218.py
-│   │   ├── 0003_auto_20170515_1220.py
-│   │   ├── 0004_prelevement_to_html.py
+│   │   ├── 0002_user.py
 │   │   └── __init__.py
 │   ├── models
 │   │   ├── animal.py
@@ -40,7 +39,8 @@
 │   │   ├── __init__.py
 │   │   ├── prelevement.py
 │   │   ├── preleveur.py
-│   │   └── race.py
+│   │   ├── race.py
+│   │   └── user.py
 │   ├── static
 │   │   └── form
 │   │       ├── css
@@ -90,15 +90,16 @@
 │   ├── archive
 │   ├── error
 │   ├── file_to_insert
-│   │   ├── animal_4_20.ods
-│   │   ├── animal_6_20h45.ods
-│   │   ├── animal_6_23h.ods
+│   │   ├── animal_4_1706190943.ods
+│   │   ├── animal_6_1706190945.ods
+│   │   ├── animal_6_1706190947.ods
+│   │   ├── genotypage_1706190948.ods
 │   │   ├── Nouveau document
-│   │   ├── prelevement_4_20h.ods
-│   │   └── prelevement_5_23h.ods
+│   │   ├── prelevement_1706190949.ods
+│   │   └── prelevement_1706190950.ods
 │   └── logs
 ├── script.sh
 ├── script.sql
 └── tree.txt
 
-25 directories, 76 files
+25 directories, 77 files

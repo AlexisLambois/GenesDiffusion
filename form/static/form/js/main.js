@@ -1,9 +1,20 @@
 var created_infos_genotypage = false;
 var created_infos_prelevement = false;
 
+/* Action bouton generation affichage exportation 
+ * Cf genotypage.html
+ * Genere l affichage d export de genotypage.html
+ */
+
 function open_infos_genotypage(){
+	
+	// On fait disparaitre le tableau et on affiche la div de sauvegarde
+	
 	document.getElementsByClassName('container')[0].hidden = true;
 	document.getElementsByClassName('infos')[0].hidden = false;
+	
+	// Si c'est la premiere fois on genere les cases et leurs labels 
+	
 	if (!created_infos_genotypage) {
 		document.getElementById('check').checked = false;
 		text = "<table>";
@@ -21,11 +32,23 @@ function open_infos_genotypage(){
 		$(text).appendTo(".form");
 		created_infos_genotypage = true;
 	}
+	
 }
 
+/* Action bouton generation affichage exportation 
+ * Cf print.html
+ * Genere l affichage d export de print.html
+ */
+
 function open_infos_prelevement(){
+	
+	// On fait disparaitre le tableau et on affiche la div de sauvegarde
+	
 	document.getElementsByClassName('container')[0].hidden = true;
 	document.getElementsByClassName('infos')[0].hidden = false;
+	
+	// Si c'est la premiere fois on genere les cases et leurs labels 
+	
 	if (!created_infos_prelevement) {
 		document.getElementById('check').checked = false;
 		text = "<table>";
@@ -55,7 +78,18 @@ function open_infos_prelevement(){
 	}
 }
 
+/* Requete permettant le retour des donnees correspondant a la recherche
+ * @params :
+ * 	indice = tableau contenant les indices des colonnnes ou il y a eu une saisie
+ * 	inputs = tableau contenant toutes les entrees dans les zones de saisie
+ * 	operateurs = tableau contenant les operateurs ( >,=,< ) ou rien selon l indice des colonnes 
+ * Cf print.html
+ */
+
 function getData(indice,inputs,operateurs){
+	
+	// Requete POST appelle printer.py
+	
 	$.ajax({
 		type: "POST",
 		url: "/ajax/printer/",
@@ -66,7 +100,18 @@ function getData(indice,inputs,operateurs){
 	});
 };
 
+/* Requete permettant le retour des donnees correspondant a la recherche
+ * @params :
+ * 	indice = tableau contenant les indices des colonnnes ou il y a eu une saisie
+ * 	inputs = tableau contenant toutes les entrees dans les zones de saisie
+ * 	operateurs = tableau contenant les operateurs ( >,=,< ) ou rien selon l indice des colonnes 
+ * Cf genotypage.html
+ */
+
 function getGenotypage(indice,inputs,operateurs){
+	
+	// Requete GET appelle genoty.py
+	
 	$.ajax({
 		type: "GET",
 		url: "/ajax/genoty/",
@@ -77,7 +122,16 @@ function getGenotypage(indice,inputs,operateurs){
 	});
 };
 
+/* Requete permettant l insertion de donnees en base 
+ * @params :
+ *	data = tableau double dimension contenant les donnees a inserer 
+ * Cf insert.html
+ */
+
 function insertAnimal(data){
+
+	// Requete POST appelle insert.py
+
 	$.ajax({
 		type: "POST",
 		url: "/ajax/add/",
@@ -90,31 +144,72 @@ function insertAnimal(data){
 	});
 };
 
+/* Action declencher par le bouton export de l affichage save
+ * @params :
+ *	indice = tableau contenant les indices des colonnnes ou il y a eu une saisie
+ * 	inputs = tableau contenant toutes les entrees dans les zones de saisie
+ * 	operateurs = tableau contenant les operateurs ( >,=,< ) ou rien selon l indice des colonnes 
+ * 	case_cocher = tableau contenant les indices des colonnnes souhaiter dans le tableur final
+ * Cf print.html
+ */
+
 function saveData(indice,inputs,operateurs,case_cocher){
+	
+	// Requete POST appelle print.py
+
 	$.ajax({
 		type: "POST",
 		url: "/ajax/save/",
 		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs,'case_cocher':case_cocher},
 		success: function(data) {
+			
+			// Retour a l affichage du tableau
+			
 			document.getElementsByClassName('container')[0].hidden = false;
 			document.getElementsByClassName('infos')[0].hidden = true;
 		}
 	});
 };
 
+/* Action declencher par le bouton export de l affichage save
+ * @params :
+ *	indice = tableau contenant les indices des colonnnes ou il y a eu une saisie
+ * 	inputs = tableau contenant toutes les entrees dans les zones de saisie
+ * 	operateurs = tableau contenant les operateurs ( >,=,< ) ou rien selon l indice des colonnes 
+ * 	case_cocher = tableau contenant les indices des colonnnes souhaiter dans le tableur final
+ * Cf genotypage.html
+ */
+
 function saveData_Genoty(indice,inputs,operateurs,case_cocher){
+	
+	// Requete POST appelle genoty.py
+
 	$.ajax({
 		type: "POST",
 		url: "/ajax/save_geno/",
 		data: {'indice': indice,'inputs':inputs,'operateurs':operateurs,'case_cocher':case_cocher},
 		success: function(data) {
+			
+			// Retour a l affichage du tableau
+			
 			document.getElementsByClassName('container')[0].hidden = false;
 			document.getElementsByClassName('infos')[0].hidden = true;
 		}
 	});
 };
 
+/* Recherche automatique a chaque saisie dans les champs
+ * @params :
+ *	table = nom de la table questionner ( race/cheptel/preleveur )
+ * 	input = saisie du champ id
+ * 	insert = boolean true : saisie pour insert / false : saisie pour update 
+ * Cf admin.html
+ */
+
 function findData(table,input_id,insert){
+	
+	// Requete POST appelle genoty.py
+
 	$.ajax({
 		type: "POST",
 		url: "/ajax/find/",
@@ -233,18 +328,6 @@ function show_hide(maclass,bool) {
 	}
 }
 
-//function affiche_tab(data,div){
-//	console.log(data);
-//	$("<table class=\"data\" >").appendTo(div);
-//	text = ""
-//	for (var i = 0; i < data.length; i++) {
-//		for (var j = 0; j < data[i].length; j++) {
-//			text+=data[i][j];
-//		}
-//	}
-//	$(text).appendTo(div+" table");
-//}
-
 //--------------------------------------------------------------------------------------------------------//
 
 function indice_change(inputs){
@@ -324,6 +407,8 @@ function affiche_tab(data,div){
 	show_hide("race",show[4]);
 }
 
+/* Recuperation des cookies */
+/*
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -338,3 +423,4 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+*/

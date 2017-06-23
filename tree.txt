@@ -1,5 +1,4 @@
 .
-├── archive
 ├── db.sqlite3
 ├── form
 │   ├── admin.py
@@ -99,4 +98,4 @@
 ├── script.sql
 └── tree.txt
 
-25 directories, 74 files
+24 directories, 74 files

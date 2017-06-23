@@ -20,21 +20,32 @@ from form.manager.genotypagemanager import GenotypageManager
 @csrf_exempt
 def insert_view(request):
 
+    """ Verifie que cela soit bien un appelle du formulaire """
+    
     if request.method == 'POST' and request.FILES['myfile']:
+        
+        """ Recuperation des paramaetres """
         
         myfile = request.FILES['myfile']
         table = (request.POST.get('table'))
         error_data = []
         data = []
+        
+        """ Si l extension du fichier est bonne """
+        
         if extension_verif(myfile.name): 
+            
+            """ Stockage du fichier dans le repertoire prevu """
             
             fs = FileSystemStorage()
             filename = fs.save(myfile.name, myfile)
             uploaded_file_url = fs.url(filename)
-       
+            
+            """ Collecte des donnees du fichier """
+             
             data = data_gather( settings.BASE_DIR + uploaded_file_url)
-            data.append([myfile.name])
-            data.append([table])
+            data.append([myfile.name]) # Insertion du nom du fichier apres les donnnes
+            data.append([table]) # Insertion du nom de la table concerne
             
             if table.lower() == "animal" and len(data[0]) == 10 :
                 data_changed = find_data_changed_animal(data)
@@ -51,7 +62,8 @@ def insert_view(request):
             else:
                 data = "<h3>Fichier incompatible avec le parametre " + str(table) + "</h3>"
                 error_data = []
-                data_changed = []  
+                data_changed = []
+                
         return render(request, 'form/insert.html', {
             'error_data' : error_data,
             'data' : json.dumps(data),
@@ -61,12 +73,22 @@ def insert_view(request):
 
 #----------------------------------------------------------Fichier----------------------------------------------------------#
 
+""" Verification de la validite de l extension du fichier
+    @params
+        filename : nom du fichier
+"""
+
 def extension_verif(filename):
     tab = [".csv",".ods",".xlsx",".xls"]
     for extension in tab:      
         if extension == str(filename[filename.index('.'):]):
             return True
     return False
+
+""" Recuperation des donnnes selon l extension du fichier
+    @params
+        filename : nom du fichier
+"""
 
 def data_gather(filename):
     extension = str(filename[filename.index('.'):])

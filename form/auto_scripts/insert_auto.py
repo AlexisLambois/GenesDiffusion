@@ -302,7 +302,7 @@ def insert_in_log(tab):
       
 def insert_animals(data,filename):
     
-    i = os.path.split(filename)[0]
+    i = os.path.split(filename)[1]
     temp = i[i.index('_')+1:]
     ordre = temp[:temp.index('_')]
     
@@ -337,7 +337,7 @@ def insert_animals(data,filename):
         else:
             to_log_insert.append(temp_log)    
                
-        animal_temp = Animal.create(data[row][0],data[row][1],data[row][2],data[row][3],data[row][4],data[row][5],data[row][6],data[row][7],ordre,time.strftime('%d-%m-%y',time.localtime()),data[row][8],data[row][9])
+        animal_temp = Animal.create(str(data[row][0]).upper(),str(data[row][1]).upper(),str(data[row][2]).upper(),str(data[row][3]).upper(),str(data[row][4]).upper(),str(data[row][5]).upper(),str(data[row][6]).upper(),str(data[row][7]).upper(),ordre,time.strftime('%d-%m-%y',time.localtime()),str(data[row][8]).upper(),str(data[row][9]).upper())
         AnimalManager.register(animal_temp) 
         
     return to_log_insert    
@@ -375,7 +375,7 @@ def insert_prelev(data,filename):
         else:
             to_log_insert.append(temp_log)    
                
-        preleve_temp = Prelevement.create(data[row][0],data[row][1],data[row][2],data[row][3],data[row][4],data[row][5],data[row][6],data[row][7],data[row][8],data[row][9],data[row][10],data[row][11],data[row][12],time.strftime('%d-%m-%y',time.localtime()),data[row][13],data[row][14])
+        preleve_temp = Prelevement.create(str(data[row][0]).upper(),str(data[row][1]).upper(),str(data[row][2]).upper(),str(data[row][3]).upper(),str(data[row][4]).upper(),str(data[row][5]).upper(),str(data[row][6]).upper(),str(data[row][7]).upper(),str(data[row][8]).upper(),str(data[row][9]).upper(),str(data[row][10]).upper(),str(data[row][11]).upper(),str(data[row][12]).upper(),time.strftime('%d-%m-%y',time.localtime()),str(data[row][13]).upper(),str(data[row][14]).upper())
         PrelevementManager.register(preleve_temp) 
         
     return to_log_insert
@@ -413,7 +413,7 @@ def insert_genoty(data,filename):
         else:
             to_log_insert.append(temp_log)    
                
-        genoty_temp = Genotypage.create(data[row][0],data[row][1],data[row][2],data[row][3],data[row][4],data[row][5],data[row][6],data[row][7],data[row][8],data[row][9])
+        genoty_temp = Genotypage.create(str(data[row][0]).upper(),str(data[row][1]).upper(),str(data[row][2]).upper(),str(data[row][3]).upper(),str(data[row][4]).upper(),str(data[row][5]).upper(),str(data[row][6]).upper(),str(data[row][7]).upper(),str(data[row][8]).upper(),str(data[row][9]).upper())
         GenotypageManager.register(genoty_temp) 
         
     return to_log_insert    

@@ -4,6 +4,7 @@
 rm form/manager/*.pyc
 rm form/models/*.pyc
 rm form/migrations/*.pyc
+rm form/auto_scripts/*.pyc
 rm form/ajax/*.pyc
 rm form/*.pyc
 rm form/views/*.pyc

@@ -21,6 +21,7 @@
     		<input type="submit" value="Connection"/>
     	</form>
 	</div>
+	
 	<br>
 	
 	<div class="container" hidden="true">
@@ -28,23 +29,39 @@
 		<a href="genotypage/" >Genotypage</a>
 		<a href="insert/" class="for_admin" hidden="true">Insertion</a>
 		<a href="admin/" class="for_admin" hidden="true">Admin</a>
+		<a onclick="javascript:deco();">Deconnection</a>
 	</div>
 	
 	{% if data %} 
 		<script type="text/javascript">
 			session = {{ data|safe }}
-			sessionStorage.clear();
 			sessionStorage.setItem("user", session[0]);
 			sessionStorage.setItem("droit", session[1] );
-			console.log(document.getElementsByClassName('container')[0]);
-			document.getElementsByClassName('container')[0].hidden = false;
 			console.log(session);
-			if ( session[1]){
-				document.getElementsByClassName('for_admin')[0].hidden = false;
-				document.getElementsByClassName('for_admin')[1].hidden = false;
-			}
 		</script>
 	{%endif%}
 	
+	<script type="text/javascript">
+
+		if(sessionStorage.getItem('user') != null){
+			document.getElementsByClassName('connec')[0].hidden = true;
+			document.getElementsByClassName('container')[0].hidden = false;
+			if ( sessionStorage.getItem('droit') == "true" ){
+				document.getElementsByClassName('for_admin')[0].hidden = false;
+				document.getElementsByClassName('for_admin')[1].hidden = false;
+			}else{
+				document.getElementsByClassName('for_admin')[0].hidden = true;
+				document.getElementsByClassName('for_admin')[1].hidden = true;
+			}
+		}
+		
+		function deco(){
+			sessionStorage.clear();
+			document.getElementsByClassName('connec')[0].hidden = false;
+			document.getElementsByClassName('container')[0].hidden = true;
+			document.getElementsByClassName('for_admin')[0].hidden = true;
+			document.getElementsByClassName('for_admin')[1].hidden = true;
+		}
+	</script>
 </body>
 </html>

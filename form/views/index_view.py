@@ -17,7 +17,7 @@ def index_view(request):
         
         id = (request.POST.get('id'))
         pwd = (request.POST.get('pwd'))
-        user_temp = UserManager.get_user(id) #On va chercher l utilisateur correspondant
+        user_temp = UserManager.get_user(id) # On va chercher l utilisateur correspondant
         
         """ Test si un utilisateur correspont et si c est le bon mot de passe """
         

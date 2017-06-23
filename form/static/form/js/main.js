@@ -241,7 +241,7 @@ function findData(table,input_id,insert){
 
 //------------------------------------Mise au propre Affichage--------------------------------------------//
 
-show = [true,true,true,true,true];
+visibilite = [true,true,true,true,true];
 
 var genotypage = ["Plaque","Position","Format de puce","Date de Debut","Date de Scan","CallRate","Link to File","Note"];
 var prelevement = ["Date Insertion","Plaque","Position","Date Enregistrement","Date Demande","Date Extraction","Date Reception Lille","Type de Materiel","Dosage","Conformite","Code Barre","Nombre Extraction","Echec Extraction","Statut VCG"];
@@ -249,6 +249,12 @@ var preleveur = ["Numero Agrement","Nom"];
 var animal = ["Ordre","Date Insert/Up","Id","Nom","Sexe","Date de naissance","Pere","Mere","Pays","Jumeaux"];
 var race = ["Numero Race","Nom Race"];
 var cheptel = ["Cheptel Actuel","Detenteur Actuel"];
+
+/* Affichage de l entete selon la table specifie en param
+ * @params:
+ * 	nom_entete = chaine de carac representant la table dont on veut l entete
+ * Cf print.html and genotypage.html
+ */
 
 function affiche_entete(nom_entete){
 	var text = "";
@@ -276,18 +282,40 @@ function affiche_entete(nom_entete){
 	return text;
 }
 
+/* Change dans le tableau des visibilitees
+ * @params :
+ * 	integer : indice a destination du tableau show
+ * 		0 : prelevement
+ * 		1 : preleveur
+ * 		2 : animal
+ * 		3 : cheptel
+ * 		4 : race
+ * Cf print.html
+ */
+
 function swap(integer){
-	if(show[integer]){
-		show[integer]=false;
+	
+	// Change la valeur de visibilite et set la visibilite de chaque partie selon le tableau show
+	
+	if(visibilite[integer]){
+		visibilite[integer]=false;
 	}else{
-		show[integer]=true;
+		visibilite[integer]=true;
 	}
-	show_hide("prelevement",show[0]);
-	show_hide("preleveur",show[1]);
-	show_hide("animal",show[2]);
-	show_hide("cheptel",show[3]);
-	show_hide("race",show[4]);
+	
+	show_hide("prelevement",visibilite[0]);
+	show_hide("preleveur",visibilite[1]);
+	show_hide("animal",visibilite[2]);
+	show_hide("cheptel",visibilite[3]);
+	show_hide("race",visibilite[4]);
 }
+
+/* Boucle simple permettant la repetition x fois d une chaine de caracteres 
+ * @params : 
+ * 	int : nombre de fois a repeter
+ *  insert : chaine de caracteres a repeter
+ * Cf print.html
+ */
 
 function genere_x_text(int,insert){
 	var text = "";
@@ -296,6 +324,10 @@ function genere_x_text(int,insert){
 	}
 	return text;
 }
+
+/* Genere les differentes de saisie afin de faire les recherches
+ * Cf print.html
+ */
 
 function genere_champs_affichage(){
 	
@@ -318,6 +350,13 @@ function genere_champs_affichage(){
 	return text;
 }
 
+/* Affiche ou fait disparaitre une class selon le boolean place en parametre
+ * @params :
+ * 	maclass : chaine de caracteres representant la classe a faire disparaitre ou afficher
+ * 	bool : boolean indiquant l etat dans lequel doit etre la classe
+ * Cf main.js
+ */
+
 function show_hide(maclass,bool) {
 	var laclass = document.getElementsByClassName(maclass);
 	for (var i = 0; i < laclass.length ; i++) {
@@ -330,6 +369,12 @@ function show_hide(maclass,bool) {
 
 //--------------------------------------------------------------------------------------------------------//
 
+/* Cherche dans un tableau les indices des cases contenant un champs vide
+ * @params : 
+ * 	inputs = tableau contenant des chaines de caracteres vide ou non-vide
+ * Cf print.html
+ */
+
 function indice_change(inputs){
 	var listid = [];
 	for (var i = 0; i < inputs.length; i++) {
@@ -340,6 +385,12 @@ function indice_change(inputs){
 	return listid;
 }
 
+/* Affiche ou fait disparaitre une class 
+ * @params :
+ * 	maclass : chaine de caracteres representant la classe a faire disparaitre ou afficher
+ * Cf admin.html
+ */
+
 function show_hide_class(maclass) {
 	var lediv = document.getElementsByClassName(maclass);
 	for (var i = 0; i < lediv.length ; i++) {
@@ -349,6 +400,13 @@ function show_hide_class(maclass) {
 			lediv[i].style.display = "none";
 	}
 }
+
+/* Transforme les donnnes fournis en format tableau pour html
+ * @params : 
+ * 	data = tableau double dimensions contenant des donnees 
+ * 		nb : peut contenir une chaine de caractere si une erreur et retourne
+ * Cf insert.html
+ */
 
 function data_to_html(data){
 	if( typeof(data) == "string"){
@@ -370,6 +428,12 @@ function data_to_html(data){
 	return text+"</table>";
 }
 
+/* Colore en rouge les cases du tableau html correspondant a une valeur errone
+ * @params : 
+ * 	error_tab = tableau a double dimension conteant les indices des cases errone
+ * Cf insert.html
+ */
+
 function search_error(error_tab){
 	var error = false;
 	for (var i = 0; i < error_tab.length; i++) {
@@ -382,6 +446,12 @@ function search_error(error_tab){
 	return error;
 }
 
+/* Colore en orange les cases du tableau html correspondant a une valeur modifie
+ * @params : 
+ * 	changed_data = tableau a double dimension conteant les indices des cases modifie
+ * Cf insert.html
+ */
+
 function color_changed_data(changed_data){
 	for (var i = 0; i < changed_data.length; i++) {
 		var ligne = document.getElementById(i+1+"")
@@ -390,6 +460,13 @@ function color_changed_data(changed_data){
 		}
 	}
 }
+
+/* Affichage d un tableau sous forme html 
+ * @params :
+ * 	data = tableua double dimensions contenant des donnees dous forme html ( ex : <tr><td>45</td><td>46</td></tr> )
+ *  div = nom de la balise div ou inserer toutes les donnees
+ * Cf print.html
+ */
 
 function affiche_tab(data,div){
 	$("<table class=\"data\" >").appendTo(div);
@@ -406,21 +483,3 @@ function affiche_tab(data,div){
 	show_hide("cheptel",show[3]);
 	show_hide("race",show[4]);
 }
-
-/* Recuperation des cookies */
-/*
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-*/

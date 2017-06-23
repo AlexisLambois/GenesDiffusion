@@ -3,7 +3,6 @@ Created on 18 mai 2017
 
 @author: alexis
 '''
-from form.manager.genotypage_prelevementmanager import Genotypage_PrelevementManager
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 

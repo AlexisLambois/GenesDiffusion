@@ -12,9 +12,7 @@
 │   ├── apps.py
 │   ├── auto_scripts
 │   │   ├── __init__.py
-│   │   ├── __init__.pyc
-│   │   ├── insert_auto.py
-│   │   └── insert_auto.pyc
+│   │   └── insert_auto.py
 │   ├── __init__.py
 │   ├── manager
 │   │   ├── animalmanager.py
@@ -44,8 +42,7 @@
 │   ├── static
 │   │   └── form
 │   │       ├── css
-│   │       │   ├── style2.css
-│   │       │   └── style.css
+│   │       │   └── style2.css
 │   │       ├── data_animal
 │   │       │   ├── data_4.ods
 │   │       │   ├── data_5.ods
@@ -102,4 +99,4 @@
 ├── script.sql
 └── tree.txt
 
-25 directories, 77 files
+25 directories, 74 files
